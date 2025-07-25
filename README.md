@@ -39,4 +39,4 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ---
 
-Made with ❤️ by a 14-year-old game dev who loves tech and Roblox.
+Made with ❤️ by a 14-year-old game dev who loves tech and making games.

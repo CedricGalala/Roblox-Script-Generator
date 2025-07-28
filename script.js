@@ -18,7 +18,7 @@ script.Parent.Touched:Connect(function(hit)
 end)
 `;
 
-// Replace {{placeholders}} with real values
+// Replace placeholders in templates
 function fillTemplate(template, values) {
   return template.replace(/{{(.*?)}}/g, (_, key) => values[key] || '');
 }
@@ -98,11 +98,11 @@ function setDarkMode(enabled) {
   localStorage.setItem('darkMode', enabled ? 'true' : 'false');
 }
 
-// Load preference on page load
+// Load saved preference
 const savedMode = localStorage.getItem('darkMode');
 setDarkMode(savedMode === 'true');
 
-// Toggle on button click
+// Toggle dark mode on button click
 darkModeToggle.addEventListener('click', () => {
   const isDark = document.body.classList.contains('dark-mode');
   setDarkMode(!isDark);

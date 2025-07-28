@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Roblox Script Generator</title>
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -9,23 +10,24 @@
   <header>
     <h1>Roblox Script Generator</h1>
     <p>Build scripts for Roblox Studio with a few clicks</p>
-    <button id="darkModeToggle">🌙 Dark Mode</button>
+    <button id="darkModeToggle" aria-label="Toggle Dark Mode">🌙 Dark Mode</button>
   </header>
 
   <main>
     <!-- Kill Brick Generator -->
-    <section class="tool">
+    <section class="tool" id="killBrickSection">
       <h2>Kill Brick Generator</h2>
       <label for="damageInput">Damage:</label>
       <input type="number" id="damageInput" placeholder="10" />
-      <br />
-      <button id="generateKillBrick">Generate Script</button>
-      <button id="copyKillScript">Copy Script</button>
+      <div class="button-row">
+        <button id="generateKillBrick">Generate Script</button>
+        <button id="copyKillScript">Copy Script</button>
+      </div>
       <pre id="killOutput" class="code-box"></pre>
     </section>
 
     <!-- Teleport Pad Generator -->
-    <section class="tool">
+    <section class="tool" id="teleportPadSection">
       <h2>Teleport Pad Generator</h2>
       <label for="xInput">X:</label>
       <input type="number" id="xInput" placeholder="0" />
@@ -33,25 +35,27 @@
       <input type="number" id="yInput" placeholder="10" />
       <label for="zInput">Z:</label>
       <input type="number" id="zInput" placeholder="0" />
-      <br />
-      <button id="generateTeleport">Generate Script</button>
-      <button id="copyTeleportScript">Copy Script</button>
+      <div class="button-row">
+        <button id="generateTeleport">Generate Script</button>
+        <button id="copyTeleportScript">Copy Script</button>
+      </div>
       <pre id="teleportOutput" class="code-box"></pre>
     </section>
 
     <!-- Spinner Part Generator -->
-    <section class="tool">
+    <section class="tool" id="spinnerSection">
       <h2>Spinner Part Generator</h2>
       <label for="spinSpeedInput">Rotation Speed (degrees/second):</label>
       <input type="number" id="spinSpeedInput" placeholder="60" />
-      <br />
-      <button id="generateSpinner">Generate Script</button>
-      <button id="copySpinnerScript">Copy Script</button>
+      <div class="button-row">
+        <button id="generateSpinner">Generate Script</button>
+        <button id="copySpinnerScript">Copy Script</button>
+      </div>
       <pre id="spinnerOutput" class="code-box"></pre>
     </section>
 
     <!-- Toggle Door Generator -->
-    <section class="tool">
+    <section class="tool" id="toggleDoorSection">
       <h2>Toggle Door Generator</h2>
       <label for="doorXInput">Open Position X:</label>
       <input type="number" id="doorXInput" placeholder="0" />
@@ -59,22 +63,24 @@
       <input type="number" id="doorYInput" placeholder="10" />
       <label for="doorZInput">Open Position Z:</label>
       <input type="number" id="doorZInput" placeholder="0" />
-      <br />
-      <button id="generateDoor">Generate Script</button>
-      <button id="copyDoorScript">Copy Script</button>
+      <div class="button-row">
+        <button id="generateDoor">Generate Script</button>
+        <button id="copyDoorScript">Copy Script</button>
+      </div>
       <pre id="doorOutput" class="code-box"></pre>
     </section>
 
     <!-- Power-Up Pickup Generator -->
-    <section class="tool">
+    <section class="tool" id="powerUpSection">
       <h2>Power-Up Pickup Generator</h2>
       <label for="powerUpNameInput">Power-Up Name:</label>
       <input type="text" id="powerUpNameInput" placeholder="SpeedBoost" />
       <label for="powerUpDurationInput">Duration (seconds):</label>
       <input type="number" id="powerUpDurationInput" placeholder="10" />
-      <br />
-      <button id="generatePowerUp">Generate Script</button>
-      <button id="copyPowerUpScript">Copy Script</button>
+      <div class="button-row">
+        <button id="generatePowerUp">Generate Script</button>
+        <button id="copyPowerUpScript">Copy Script</button>
+      </div>
       <pre id="powerUpOutput" class="code-box"></pre>
     </section>
   </main>

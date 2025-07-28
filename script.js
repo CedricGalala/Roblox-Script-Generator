@@ -1,4 +1,4 @@
-// Kill Brick Script Template
+// Templates
 const killBrickTemplate = `
 script.Parent.Touched:Connect(function(hit)
     local humanoid = hit.Parent:FindFirstChild("Humanoid")
@@ -8,7 +8,6 @@ script.Parent.Touched:Connect(function(hit)
 end)
 `;
 
-// Teleport Pad Script Template
 const teleportTemplate = `
 script.Parent.Touched:Connect(function(hit)
     local character = hit.Parent
@@ -18,7 +17,6 @@ script.Parent.Touched:Connect(function(hit)
 end)
 `;
 
-// Replace placeholders in templates
 function fillTemplate(template, values) {
   return template.replace(/{{(.*?)}}/g, (_, key) => values[key] || '');
 }
@@ -39,13 +37,12 @@ document.getElementById("generateTeleport").addEventListener("click", () => {
   document.getElementById("teleportOutput").textContent = script.trim();
 });
 
-// Utility: Copy text to clipboard with fallback
+// Copy to Clipboard utility
 function copyTextToClipboard(text) {
   if (!text) {
     alert("Nothing to copy! Please generate a script first.");
     return;
   }
-
   if (navigator.clipboard && window.isSecureContext) {
     navigator.clipboard.writeText(text).then(() => {
       alert("Script copied to clipboard!");
@@ -60,31 +57,28 @@ function copyTextToClipboard(text) {
     document.body.appendChild(textArea);
     textArea.focus();
     textArea.select();
-
     try {
-      const successful = document.execCommand('copy');
-      alert(successful ? "Script copied to clipboard!" : "Failed to copy. Try again.");
-    } catch (err) {
+      document.execCommand('copy');
+      alert("Script copied to clipboard!");
+    } catch {
       alert("Failed to copy. Try again.");
     }
-
     document.body.removeChild(textArea);
   }
 }
 
-// Copy Kill Brick Script to Clipboard
+// Copy buttons
 document.getElementById("copyKillScript").addEventListener("click", () => {
   const text = document.getElementById("killOutput").textContent.trim();
   copyTextToClipboard(text);
 });
 
-// Copy Teleport Script to Clipboard
 document.getElementById("copyTeleportScript").addEventListener("click", () => {
   const text = document.getElementById("teleportOutput").textContent.trim();
   copyTextToClipboard(text);
 });
 
-// Dark mode toggle
+// Dark mode toggle logic
 const darkModeToggle = document.getElementById('darkModeToggle');
 
 function setDarkMode(enabled) {
@@ -98,12 +92,11 @@ function setDarkMode(enabled) {
   localStorage.setItem('darkMode', enabled ? 'true' : 'false');
 }
 
-// Load saved preference
+// Initialize dark mode based on saved preference
 const savedMode = localStorage.getItem('darkMode');
 setDarkMode(savedMode === 'true');
 
 // Toggle dark mode on button click
 darkModeToggle.addEventListener('click', () => {
-  const isDark = document.body.classList.contains('dark-mode');
-  setDarkMode(!isDark);
+  setDarkMode(!document.body.classList.contains('dark-mode'));
 });

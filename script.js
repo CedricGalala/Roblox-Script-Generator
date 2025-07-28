@@ -17,24 +17,89 @@ script.Parent.Touched:Connect(function(hit)
 end)
 `;
 
+const spinnerTemplate = `
+while true do
+    script.Parent.CFrame = script.Parent.CFrame * CFrame.Angles(0, math.rad({{speed}}) * wait(), 0)
+end
+`;
+
+const toggleDoorTemplate = `
+local door = script.Parent
+local openPos = Vector3.new({{x}}, {{y}}, {{z}})
+local closedPos = door.Position
+local open = false
+
+door.Touched:Connect(function(hit)
+    if hit.Parent:FindFirstChild("Humanoid") then
+        if open then
+            door.Position = closedPos
+            open = false
+        else
+            door.Position = openPos
+            open = true
+        end
+    end
+end)
+`;
+
+const powerUpTemplate = `
+local powerUpName = "{{name}}"
+local duration = {{duration}}
+
+script.Parent.Touched:Connect(function(hit)
+    local player = game.Players:GetPlayerFromCharacter(hit.Parent)
+    if player then
+        print(player.Name .. " picked up " .. powerUpName)
+        -- Example: apply power-up effect here
+        wait(duration)
+        print(powerUpName .. " expired for " .. player.Name)
+    end
+end)
+`;
+
+// Replace placeholders in templates
 function fillTemplate(template, values) {
   return template.replace(/{{(.*?)}}/g, (_, key) => values[key] || '');
 }
 
-// Generate Kill Brick Script
+// Kill Brick
 document.getElementById("generateKillBrick").addEventListener("click", () => {
   const damage = document.getElementById("damageInput").value || "10";
   const script = fillTemplate(killBrickTemplate, { damage });
   document.getElementById("killOutput").textContent = script.trim();
 });
 
-// Generate Teleport Script
+// Teleport Pad
 document.getElementById("generateTeleport").addEventListener("click", () => {
   const x = document.getElementById("xInput").value || "0";
   const y = document.getElementById("yInput").value || "10";
   const z = document.getElementById("zInput").value || "0";
   const script = fillTemplate(teleportTemplate, { x, y, z });
   document.getElementById("teleportOutput").textContent = script.trim();
+});
+
+// Spinner Part
+document.getElementById("generateSpinner").addEventListener("click", () => {
+  const speed = document.getElementById("spinSpeedInput").value || "60";
+  const script = fillTemplate(spinnerTemplate, { speed });
+  document.getElementById("spinnerOutput").textContent = script.trim();
+});
+
+// Toggle Door
+document.getElementById("generateDoor").addEventListener("click", () => {
+  const x = document.getElementById("doorXInput").value || "0";
+  const y = document.getElementById("doorYInput").value || "10";
+  const z = document.getElementById("doorZInput").value || "0";
+  const script = fillTemplate(toggleDoorTemplate, { x, y, z });
+  document.getElementById("doorOutput").textContent = script.trim();
+});
+
+// Power-Up Pickup
+document.getElementById("generatePowerUp").addEventListener("click", () => {
+  const name = document.getElementById("powerUpNameInput").value || "SpeedBoost";
+  const duration = document.getElementById("powerUpDurationInput").value || "10";
+  const script = fillTemplate(powerUpTemplate, { name, duration });
+  document.getElementById("powerUpOutput").textContent = script.trim();
 });
 
 // Copy to Clipboard utility
@@ -78,7 +143,22 @@ document.getElementById("copyTeleportScript").addEventListener("click", () => {
   copyTextToClipboard(text);
 });
 
-// Dark mode toggle logic
+document.getElementById("copySpinnerScript").addEventListener("click", () => {
+  const text = document.getElementById("spinnerOutput").textContent.trim();
+  copyTextToClipboard(text);
+});
+
+document.getElementById("copyDoorScript").addEventListener("click", () => {
+  const text = document.getElementById("doorOutput").textContent.trim();
+  copyTextToClipboard(text);
+});
+
+document.getElementById("copyPowerUpScript").addEventListener("click", () => {
+  const text = document.getElementById("powerUpOutput").textContent.trim();
+  copyTextToClipboard(text);
+});
+
+// Dark mode toggle
 const darkModeToggle = document.getElementById('darkModeToggle');
 
 function setDarkMode(enabled) {

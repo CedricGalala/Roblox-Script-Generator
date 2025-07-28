@@ -57,7 +57,7 @@ script.Parent.Touched:Connect(function(hit)
 end)
 `;
 
-// Replace placeholders in templates
+// Helper to replace placeholders
 function fillTemplate(template, values) {
   return template.replace(/{{(.*?)}}/g, (_, key) => values[key] || '');
 }
@@ -96,13 +96,13 @@ document.getElementById("generateDoor").addEventListener("click", () => {
 
 // Power-Up Pickup
 document.getElementById("generatePowerUp").addEventListener("click", () => {
-  const name = document.getElementById("powerUpNameInput").value || "SpeedBoost";
+  const name = document.getElementById("powerUpNameInput").value.trim() || "SpeedBoost";
   const duration = document.getElementById("powerUpDurationInput").value || "10";
   const script = fillTemplate(powerUpTemplate, { name, duration });
   document.getElementById("powerUpOutput").textContent = script.trim();
 });
 
-// Copy to Clipboard utility
+// Copy to Clipboard helper
 function copyTextToClipboard(text) {
   if (!text) {
     alert("Nothing to copy! Please generate a script first.");
@@ -134,28 +134,19 @@ function copyTextToClipboard(text) {
 
 // Copy buttons
 document.getElementById("copyKillScript").addEventListener("click", () => {
-  const text = document.getElementById("killOutput").textContent.trim();
-  copyTextToClipboard(text);
+  copyTextToClipboard(document.getElementById("killOutput").textContent.trim());
 });
-
 document.getElementById("copyTeleportScript").addEventListener("click", () => {
-  const text = document.getElementById("teleportOutput").textContent.trim();
-  copyTextToClipboard(text);
+  copyTextToClipboard(document.getElementById("teleportOutput").textContent.trim());
 });
-
 document.getElementById("copySpinnerScript").addEventListener("click", () => {
-  const text = document.getElementById("spinnerOutput").textContent.trim();
-  copyTextToClipboard(text);
+  copyTextToClipboard(document.getElementById("spinnerOutput").textContent.trim());
 });
-
 document.getElementById("copyDoorScript").addEventListener("click", () => {
-  const text = document.getElementById("doorOutput").textContent.trim();
-  copyTextToClipboard(text);
+  copyTextToClipboard(document.getElementById("doorOutput").textContent.trim());
 });
-
 document.getElementById("copyPowerUpScript").addEventListener("click", () => {
-  const text = document.getElementById("powerUpOutput").textContent.trim();
-  copyTextToClipboard(text);
+  copyTextToClipboard(document.getElementById("powerUpOutput").textContent.trim());
 });
 
 // Dark mode toggle
@@ -172,11 +163,10 @@ function setDarkMode(enabled) {
   localStorage.setItem('darkMode', enabled ? 'true' : 'false');
 }
 
-// Initialize dark mode based on saved preference
+// Initialize dark mode from storage
 const savedMode = localStorage.getItem('darkMode');
 setDarkMode(savedMode === 'true');
 
-// Toggle dark mode on button click
 darkModeToggle.addEventListener('click', () => {
   setDarkMode(!document.body.classList.contains('dark-mode'));
 });

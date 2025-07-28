@@ -38,3 +38,27 @@ document.getElementById("generateTeleport").addEventListener("click", () => {
   const script = fillTemplate(teleportTemplate, { x, y, z });
   document.getElementById("teleportOutput").textContent = script.trim();
 });
+
+// Copy Kill Brick Script to Clipboard
+document.getElementById("copyKillScript").addEventListener("click", () => {
+  const text = document.getElementById("killOutput").textContent;
+  if (text.trim() === '') {
+    alert("Please generate a script first!");
+    return;
+  }
+  navigator.clipboard.writeText(text).then(() => {
+    alert("Kill Brick script copied to clipboard!");
+  });
+});
+
+// Copy Teleport Script to Clipboard
+document.getElementById("copyTeleportScript").addEventListener("click", () => {
+  const text = document.getElementById("teleportOutput").textContent;
+  if (text.trim() === '') {
+    alert("Please generate a script first!");
+    return;
+  }
+  navigator.clipboard.writeText(text).then(() => {
+    alert("Teleport script copied to clipboard!");
+  });
+});

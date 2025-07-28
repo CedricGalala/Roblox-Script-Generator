@@ -39,26 +39,51 @@ document.getElementById("generateTeleport").addEventListener("click", () => {
   document.getElementById("teleportOutput").textContent = script.trim();
 });
 
-// Copy Kill Brick Script to Clipboard
-document.getElementById("copyKillScript").addEventListener("click", () => {
-  const text = document.getElementById("killOutput").textContent;
-  if (text.trim() === '') {
-    alert("Please generate a script first!");
+// Utility: Copy text to clipboard with fallback
+function copyTextToClipboard(text) {
+  if (!text) {
+    alert("Nothing to copy! Please generate a script first.");
     return;
   }
-  navigator.clipboard.writeText(text).then(() => {
-    alert("Kill Brick script copied to clipboard!");
-  });
+
+  if (navigator.clipboard && window.isSecureContext) {
+    // navigator clipboard api method
+    navigator.clipboard.writeText(text).then(() => {
+      alert("Script copied to clipboard!");
+    }, () => {
+      alert("Failed to copy. Try again.");
+    });
+  } else {
+    // fallback method
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    // Avoid scrolling to bottom
+    textArea.style.position = "fixed";
+    textArea.style.top = "-9999px";
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+
+    try {
+      const successful = document.execCommand('copy');
+      alert(successful ? "Script copied to clipboard!" : "Failed to copy. Try again.");
+    } catch (err) {
+      alert("Failed to copy. Try again.");
+    }
+
+    document.body.removeChild(textArea);
+  }
+}
+
+// Copy Kill Brick Script to Clipboard
+document.getElementById("copyKillScript").addEventListener("click", () => {
+  const text = document.getElementById("killOutput").textContent.trim();
+  copyTextToClipboard(text);
 });
 
 // Copy Teleport Script to Clipboard
 document.getElementById("copyTeleportScript").addEventListener("click", () => {
-  const text = document.getElementById("teleportOutput").textContent;
-  if (text.trim() === '') {
-    alert("Please generate a script first!");
-    return;
-  }
-  navigator.clipboard.writeText(text).then(() => {
-    alert("Teleport script copied to clipboard!");
-  });
+  const text = document.getElementById("teleportOutput").textContent.trim();
+  copyTextToClipboard(text);
 });
+

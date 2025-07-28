@@ -47,17 +47,14 @@ function copyTextToClipboard(text) {
   }
 
   if (navigator.clipboard && window.isSecureContext) {
-    // navigator clipboard api method
     navigator.clipboard.writeText(text).then(() => {
       alert("Script copied to clipboard!");
     }, () => {
       alert("Failed to copy. Try again.");
     });
   } else {
-    // fallback method
     const textArea = document.createElement("textarea");
     textArea.value = text;
-    // Avoid scrolling to bottom
     textArea.style.position = "fixed";
     textArea.style.top = "-9999px";
     document.body.appendChild(textArea);
@@ -87,3 +84,26 @@ document.getElementById("copyTeleportScript").addEventListener("click", () => {
   copyTextToClipboard(text);
 });
 
+// Dark mode toggle
+const darkModeToggle = document.getElementById('darkModeToggle');
+
+function setDarkMode(enabled) {
+  if (enabled) {
+    document.body.classList.add('dark-mode');
+    darkModeToggle.textContent = '☀️ Light Mode';
+  } else {
+    document.body.classList.remove('dark-mode');
+    darkModeToggle.textContent = '🌙 Dark Mode';
+  }
+  localStorage.setItem('darkMode', enabled ? 'true' : 'false');
+}
+
+// Load preference on page load
+const savedMode = localStorage.getItem('darkMode');
+setDarkMode(savedMode === 'true');
+
+// Toggle on button click
+darkModeToggle.addEventListener('click', () => {
+  const isDark = document.body.classList.contains('dark-mode');
+  setDarkMode(!isDark);
+});

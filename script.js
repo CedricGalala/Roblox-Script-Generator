@@ -1,4 +1,4 @@
-// Templates
+// ==== Templates ====
 const killBrickTemplate = `
 script.Parent.Touched:Connect(function(hit)
     local humanoid = hit.Parent:FindFirstChild("Humanoid")
@@ -11,8 +11,8 @@ end)
 const teleportTemplate = `
 script.Parent.Touched:Connect(function(hit)
     local character = hit.Parent
-    if character:FindFirstChild("Humanoid") then
-        character:SetPrimaryPartCFrame(CFrame.new({{x}}, {{y}}, {{z}}))
+    if character:FindFirstChild("HumanoidRootPart") then
+        character:MoveTo(Vector3.new({{x}}, {{y}}, {{z}}))
     end
 end)
 `;
@@ -50,26 +50,26 @@ script.Parent.Touched:Connect(function(hit)
     local player = game.Players:GetPlayerFromCharacter(hit.Parent)
     if player then
         print(player.Name .. " picked up " .. powerUpName)
-        -- Example: apply power-up effect here
+        -- Apply power-up effect here
         wait(duration)
         print(powerUpName .. " expired for " .. player.Name)
     end
 end)
 `;
 
-// Helper to replace placeholders
+// ==== Helper Function ====
 function fillTemplate(template, values) {
   return template.replace(/{{(.*?)}}/g, (_, key) => values[key] || '');
 }
 
-// Kill Brick
+// ==== Kill Brick ====
 document.getElementById("generateKillBrick").addEventListener("click", () => {
   const damage = document.getElementById("damageInput").value || "10";
   const script = fillTemplate(killBrickTemplate, { damage });
   document.getElementById("killOutput").textContent = script.trim();
 });
 
-// Teleport Pad
+// ==== Teleport Pad ====
 document.getElementById("generateTeleport").addEventListener("click", () => {
   const x = document.getElementById("xInput").value || "0";
   const y = document.getElementById("yInput").value || "10";
@@ -78,14 +78,14 @@ document.getElementById("generateTeleport").addEventListener("click", () => {
   document.getElementById("teleportOutput").textContent = script.trim();
 });
 
-// Spinner Part
+// ==== Spinner Part ====
 document.getElementById("generateSpinner").addEventListener("click", () => {
   const speed = document.getElementById("spinSpeedInput").value || "60";
   const script = fillTemplate(spinnerTemplate, { speed });
   document.getElementById("spinnerOutput").textContent = script.trim();
 });
 
-// Toggle Door
+// ==== Toggle Door ====
 document.getElementById("generateDoor").addEventListener("click", () => {
   const x = document.getElementById("doorXInput").value || "0";
   const y = document.getElementById("doorYInput").value || "10";
@@ -94,7 +94,7 @@ document.getElementById("generateDoor").addEventListener("click", () => {
   document.getElementById("doorOutput").textContent = script.trim();
 });
 
-// Power-Up Pickup
+// ==== Power-Up Pickup ====
 document.getElementById("generatePowerUp").addEventListener("click", () => {
   const name = document.getElementById("powerUpNameInput").value.trim() || "SpeedBoost";
   const duration = document.getElementById("powerUpDurationInput").value || "10";
@@ -102,16 +102,17 @@ document.getElementById("generatePowerUp").addEventListener("click", () => {
   document.getElementById("powerUpOutput").textContent = script.trim();
 });
 
-// Copy to Clipboard helper
+// ==== Clipboard Copy Helper ====
 function copyTextToClipboard(text) {
   if (!text) {
     alert("Nothing to copy! Please generate a script first.");
     return;
   }
+
   if (navigator.clipboard && window.isSecureContext) {
     navigator.clipboard.writeText(text).then(() => {
       alert("Script copied to clipboard!");
-    }, () => {
+    }).catch(() => {
       alert("Failed to copy. Try again.");
     });
   } else {
@@ -123,7 +124,7 @@ function copyTextToClipboard(text) {
     textArea.focus();
     textArea.select();
     try {
-      document.execCommand('copy');
+      document.execCommand("copy");
       alert("Script copied to clipboard!");
     } catch {
       alert("Failed to copy. Try again.");
@@ -132,7 +133,7 @@ function copyTextToClipboard(text) {
   }
 }
 
-// Copy buttons
+// ==== Copy Button Events ====
 document.getElementById("copyKillScript").addEventListener("click", () => {
   copyTextToClipboard(document.getElementById("killOutput").textContent.trim());
 });
@@ -149,24 +150,20 @@ document.getElementById("copyPowerUpScript").addEventListener("click", () => {
   copyTextToClipboard(document.getElementById("powerUpOutput").textContent.trim());
 });
 
-// Dark mode toggle
-const darkModeToggle = document.getElementById('darkModeToggle');
+// ==== Dark Mode Toggle ====
+const darkModeToggle = document.getElementById("darkModeToggle");
 
 function setDarkMode(enabled) {
-  if (enabled) {
-    document.body.classList.add('dark-mode');
-    darkModeToggle.textContent = '☀️ Light Mode';
-  } else {
-    document.body.classList.remove('dark-mode');
-    darkModeToggle.textContent = '🌙 Dark Mode';
-  }
-  localStorage.setItem('darkMode', enabled ? 'true' : 'false');
+  document.body.classList.toggle("dark-mode", enabled);
+  darkModeToggle.textContent = enabled ? "☀️ Light Mode" : "🌙 Dark Mode";
+  localStorage.setItem("darkMode", enabled ? "true" : "false");
 }
 
-// Initialize dark mode from storage
-const savedMode = localStorage.getItem('darkMode');
-setDarkMode(savedMode === 'true');
+// Initialize dark mode from localStorage
+const savedMode = localStorage.getItem("darkMode") === "true";
+setDarkMode(savedMode);
 
-darkModeToggle.addEventListener('click', () => {
-  setDarkMode(!document.body.classList.contains('dark-mode'));
+darkModeToggle.addEventListener("click", () => {
+  const enabled = !document.body.classList.contains("dark-mode");
+  setDarkMode(enabled);
 });

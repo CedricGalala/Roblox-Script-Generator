@@ -1,48 +1,82 @@
+/* Global Reset & Base Styles */
+* {
+  box-sizing: border-box;
+}
+
 body {
   font-family: Arial, sans-serif;
   background-color: white;
   color: black;
   margin: 0;
   padding: 1rem;
+  transition: background-color 0.3s, color 0.3s;
 }
 
+/* Header & Footer */
 header, footer {
   background-color: #f0f0f0;
   padding: 1rem;
   text-align: center;
 }
 
+/* Main Container */
 main {
   max-width: 600px;
   margin: 1rem auto;
 }
 
+/* Tool Section Boxes */
 .tool {
   background-color: #fafafa;
   border: 1px solid #ddd;
   padding: 1rem;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
   border-radius: 6px;
 }
 
+/* Labels & Inputs */
 label {
-  display: block;
-  margin-bottom: 0.5rem;
-}
-
-input[type="number"] {
-  padding: 0.3rem;
-  margin-left: 0.5rem;
-  width: 60px;
-}
-
-button {
+  display: inline-block;
   margin-top: 0.5rem;
-  margin-right: 0.5rem;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
+  margin-bottom: 0.2rem;
+  font-weight: bold;
 }
 
+input[type="number"],
+input[type="text"] {
+  padding: 0.4rem;
+  margin: 0.3rem 0 0.7rem 0;
+  width: 100%;
+  max-width: 150px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Button Styling */
+button {
+  padding: 0.5rem 1rem;
+  margin: 0.5rem 0.5rem 0 0;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+/* Button Row Layout */
+.button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+/* Output Boxes */
 pre.code-box {
   background-color: #eee;
   padding: 1rem;
@@ -52,9 +86,10 @@ pre.code-box {
   border-radius: 4px;
   min-height: 80px;
   overflow-x: auto;
+  font-family: Consolas, monospace;
 }
 
-/* Dark mode styles */
+/* Dark Mode */
 body.dark-mode {
   background-color: #121212;
   color: #e0e0e0;
@@ -71,7 +106,8 @@ body.dark-mode .tool {
   border-color: #444;
 }
 
-body.dark-mode input,
+body.dark-mode input[type="number"],
+body.dark-mode input[type="text"],
 body.dark-mode button {
   background-color: #333;
   color: #eee;

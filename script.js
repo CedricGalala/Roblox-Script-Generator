@@ -1,3 +1,5 @@
+window.addEventListener('DOMContentLoaded', () => {
+
 // ==== Templates ====
 const killBrickTemplate = `
 script.Parent.Touched:Connect(function(hit)
@@ -80,14 +82,11 @@ document.getElementById("generateKillBrick").addEventListener("click", () => {
   const script = fillTemplate(killBrickTemplate, { damage });
   document.getElementById("killOutput").textContent = script.trim();
 });
-
 document.getElementById("copyKillScript").addEventListener("click", () => {
   copyTextToClipboard(document.getElementById("killOutput").textContent.trim());
 });
-
 document.getElementById("downloadKillScript").addEventListener("click", () => {
   const content = document.getElementById("killOutput").textContent.trim();
-  console.log("KillBrick Download clicked. Content length:", content.length);
   if (!content) {
     alert("Please generate the Kill Brick script before downloading.");
     return;
@@ -103,14 +102,11 @@ document.getElementById("generateTeleport").addEventListener("click", () => {
   const script = fillTemplate(teleportTemplate, { x, y, z });
   document.getElementById("teleportOutput").textContent = script.trim();
 });
-
 document.getElementById("copyTeleportScript").addEventListener("click", () => {
   copyTextToClipboard(document.getElementById("teleportOutput").textContent.trim());
 });
-
 document.getElementById("downloadTeleportScript").addEventListener("click", () => {
   const content = document.getElementById("teleportOutput").textContent.trim();
-  console.log("Teleport Download clicked. Content length:", content.length);
   if (!content) {
     alert("Please generate the Teleport Pad script before downloading.");
     return;
@@ -124,14 +120,11 @@ document.getElementById("generateSpinner").addEventListener("click", () => {
   const script = fillTemplate(spinnerTemplate, { speed });
   document.getElementById("spinnerOutput").textContent = script.trim();
 });
-
 document.getElementById("copySpinnerScript").addEventListener("click", () => {
   copyTextToClipboard(document.getElementById("spinnerOutput").textContent.trim());
 });
-
 document.getElementById("downloadSpinnerScript").addEventListener("click", () => {
   const content = document.getElementById("spinnerOutput").textContent.trim();
-  console.log("Spinner Download clicked. Content length:", content.length);
   if (!content) {
     alert("Please generate the Spinner script before downloading.");
     return;
@@ -147,14 +140,11 @@ document.getElementById("generateDoor").addEventListener("click", () => {
   const script = fillTemplate(toggleDoorTemplate, { x, y, z });
   document.getElementById("doorOutput").textContent = script.trim();
 });
-
 document.getElementById("copyDoorScript").addEventListener("click", () => {
   copyTextToClipboard(document.getElementById("doorOutput").textContent.trim());
 });
-
 document.getElementById("downloadDoorScript").addEventListener("click", () => {
   const content = document.getElementById("doorOutput").textContent.trim();
-  console.log("ToggleDoor Download clicked. Content length:", content.length);
   if (!content) {
     alert("Please generate the Toggle Door script before downloading.");
     return;
@@ -169,14 +159,11 @@ document.getElementById("generatePowerUp").addEventListener("click", () => {
   const script = fillTemplate(powerUpTemplate, { name, duration });
   document.getElementById("powerUpOutput").textContent = script.trim();
 });
-
 document.getElementById("copyPowerUpScript").addEventListener("click", () => {
   copyTextToClipboard(document.getElementById("powerUpOutput").textContent.trim());
 });
-
 document.getElementById("downloadPowerUpScript").addEventListener("click", () => {
   const content = document.getElementById("powerUpOutput").textContent.trim();
-  console.log("PowerUp Download clicked. Content length:", content.length);
   if (!content) {
     alert("Please generate the Power-Up script before downloading.");
     return;
@@ -231,3 +218,5 @@ darkModeToggle.addEventListener("click", () => {
   const enabled = !document.body.classList.contains("dark-mode");
   setDarkMode(enabled);
 });
+
+}); // end DOMContentLoaded

@@ -62,12 +62,16 @@ function fillTemplate(template, values) {
   return template.replace(/{{(.*?)}}/g, (_, key) => values[key] || '');
 }
 
-function downloadScript(filename, content) {
+function downloadScript(content, filename) {
   const blob = new Blob([content], { type: 'text/plain' });
-  const link = document.createElement('a');
-  link.href = URL.createObjectURL(blob);
-  link.download = filename;
-  link.click();
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 }
 
 // ==== Kill Brick ====
@@ -76,9 +80,11 @@ document.getElementById("generateKillBrick").addEventListener("click", () => {
   const script = fillTemplate(killBrickTemplate, { damage });
   document.getElementById("killOutput").textContent = script.trim();
 });
+document.getElementById("copyKillScript").addEventListener("click", () => {
+  copyTextToClipboard(document.getElementById("killOutput").textContent.trim());
+});
 document.getElementById("downloadKillScript").addEventListener("click", () => {
-  const script = document.getElementById("killOutput").textContent.trim();
-  if (script) downloadScript("KillBrick.lua", script);
+  downloadScript(document.getElementById("killOutput").textContent.trim(), "KillBrick.lua");
 });
 
 // ==== Teleport Pad ====
@@ -89,9 +95,11 @@ document.getElementById("generateTeleport").addEventListener("click", () => {
   const script = fillTemplate(teleportTemplate, { x, y, z });
   document.getElementById("teleportOutput").textContent = script.trim();
 });
+document.getElementById("copyTeleportScript").addEventListener("click", () => {
+  copyTextToClipboard(document.getElementById("teleportOutput").textContent.trim());
+});
 document.getElementById("downloadTeleportScript").addEventListener("click", () => {
-  const script = document.getElementById("teleportOutput").textContent.trim();
-  if (script) downloadScript("TeleportPad.lua", script);
+  downloadScript(document.getElementById("teleportOutput").textContent.trim(), "TeleportPad.lua");
 });
 
 // ==== Spinner Part ====
@@ -100,9 +108,11 @@ document.getElementById("generateSpinner").addEventListener("click", () => {
   const script = fillTemplate(spinnerTemplate, { speed });
   document.getElementById("spinnerOutput").textContent = script.trim();
 });
+document.getElementById("copySpinnerScript").addEventListener("click", () => {
+  copyTextToClipboard(document.getElementById("spinnerOutput").textContent.trim());
+});
 document.getElementById("downloadSpinnerScript").addEventListener("click", () => {
-  const script = document.getElementById("spinnerOutput").textContent.trim();
-  if (script) downloadScript("SpinnerPart.lua", script);
+  downloadScript(document.getElementById("spinnerOutput").textContent.trim(), "Spinner.lua");
 });
 
 // ==== Toggle Door ====
@@ -113,9 +123,11 @@ document.getElementById("generateDoor").addEventListener("click", () => {
   const script = fillTemplate(toggleDoorTemplate, { x, y, z });
   document.getElementById("doorOutput").textContent = script.trim();
 });
+document.getElementById("copyDoorScript").addEventListener("click", () => {
+  copyTextToClipboard(document.getElementById("doorOutput").textContent.trim());
+});
 document.getElementById("downloadDoorScript").addEventListener("click", () => {
-  const script = document.getElementById("doorOutput").textContent.trim();
-  if (script) downloadScript("ToggleDoor.lua", script);
+  downloadScript(document.getElementById("doorOutput").textContent.trim(), "ToggleDoor.lua");
 });
 
 // ==== Power-Up Pickup ====
@@ -125,9 +137,11 @@ document.getElementById("generatePowerUp").addEventListener("click", () => {
   const script = fillTemplate(powerUpTemplate, { name, duration });
   document.getElementById("powerUpOutput").textContent = script.trim();
 });
+document.getElementById("copyPowerUpScript").addEventListener("click", () => {
+  copyTextToClipboard(document.getElementById("powerUpOutput").textContent.trim());
+});
 document.getElementById("downloadPowerUpScript").addEventListener("click", () => {
-  const script = document.getElementById("powerUpOutput").textContent.trim();
-  if (script) downloadScript("PowerUp.lua", script);
+  downloadScript(document.getElementById("powerUpOutput").textContent.trim(), "PowerUp.lua");
 });
 
 // ==== Clipboard Copy Helper ====
@@ -161,23 +175,6 @@ function copyTextToClipboard(text) {
   }
 }
 
-// ==== Copy Button Events ====
-document.getElementById("copyKillScript").addEventListener("click", () => {
-  copyTextToClipboard(document.getElementById("killOutput").textContent.trim());
-});
-document.getElementById("copyTeleportScript").addEventListener("click", () => {
-  copyTextToClipboard(document.getElementById("teleportOutput").textContent.trim());
-});
-document.getElementById("copySpinnerScript").addEventListener("click", () => {
-  copyTextToClipboard(document.getElementById("spinnerOutput").textContent.trim());
-});
-document.getElementById("copyDoorScript").addEventListener("click", () => {
-  copyTextToClipboard(document.getElementById("doorOutput").textContent.trim());
-});
-document.getElementById("copyPowerUpScript").addEventListener("click", () => {
-  copyTextToClipboard(document.getElementById("powerUpOutput").textContent.trim());
-});
-
 // ==== Dark Mode Toggle ====
 const darkModeToggle = document.getElementById("darkModeToggle");
 
@@ -187,7 +184,6 @@ function setDarkMode(enabled) {
   localStorage.setItem("darkMode", enabled ? "true" : "false");
 }
 
-// Initialize dark mode from localStorage
 const savedMode = localStorage.getItem("darkMode") === "true";
 setDarkMode(savedMode);
 

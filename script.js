@@ -80,11 +80,19 @@ document.getElementById("generateKillBrick").addEventListener("click", () => {
   const script = fillTemplate(killBrickTemplate, { damage });
   document.getElementById("killOutput").textContent = script.trim();
 });
+
 document.getElementById("copyKillScript").addEventListener("click", () => {
   copyTextToClipboard(document.getElementById("killOutput").textContent.trim());
 });
+
 document.getElementById("downloadKillScript").addEventListener("click", () => {
-  downloadScript(document.getElementById("killOutput").textContent.trim(), "KillBrick.lua");
+  const content = document.getElementById("killOutput").textContent.trim();
+  console.log("KillBrick Download clicked. Content length:", content.length);
+  if (!content) {
+    alert("Please generate the Kill Brick script before downloading.");
+    return;
+  }
+  downloadScript(content, "KillBrick.lua");
 });
 
 // ==== Teleport Pad ====
@@ -95,11 +103,19 @@ document.getElementById("generateTeleport").addEventListener("click", () => {
   const script = fillTemplate(teleportTemplate, { x, y, z });
   document.getElementById("teleportOutput").textContent = script.trim();
 });
+
 document.getElementById("copyTeleportScript").addEventListener("click", () => {
   copyTextToClipboard(document.getElementById("teleportOutput").textContent.trim());
 });
+
 document.getElementById("downloadTeleportScript").addEventListener("click", () => {
-  downloadScript(document.getElementById("teleportOutput").textContent.trim(), "TeleportPad.lua");
+  const content = document.getElementById("teleportOutput").textContent.trim();
+  console.log("Teleport Download clicked. Content length:", content.length);
+  if (!content) {
+    alert("Please generate the Teleport Pad script before downloading.");
+    return;
+  }
+  downloadScript(content, "TeleportPad.lua");
 });
 
 // ==== Spinner Part ====
@@ -108,11 +124,19 @@ document.getElementById("generateSpinner").addEventListener("click", () => {
   const script = fillTemplate(spinnerTemplate, { speed });
   document.getElementById("spinnerOutput").textContent = script.trim();
 });
+
 document.getElementById("copySpinnerScript").addEventListener("click", () => {
   copyTextToClipboard(document.getElementById("spinnerOutput").textContent.trim());
 });
+
 document.getElementById("downloadSpinnerScript").addEventListener("click", () => {
-  downloadScript(document.getElementById("spinnerOutput").textContent.trim(), "Spinner.lua");
+  const content = document.getElementById("spinnerOutput").textContent.trim();
+  console.log("Spinner Download clicked. Content length:", content.length);
+  if (!content) {
+    alert("Please generate the Spinner script before downloading.");
+    return;
+  }
+  downloadScript(content, "Spinner.lua");
 });
 
 // ==== Toggle Door ====
@@ -123,11 +147,19 @@ document.getElementById("generateDoor").addEventListener("click", () => {
   const script = fillTemplate(toggleDoorTemplate, { x, y, z });
   document.getElementById("doorOutput").textContent = script.trim();
 });
+
 document.getElementById("copyDoorScript").addEventListener("click", () => {
   copyTextToClipboard(document.getElementById("doorOutput").textContent.trim());
 });
+
 document.getElementById("downloadDoorScript").addEventListener("click", () => {
-  downloadScript(document.getElementById("doorOutput").textContent.trim(), "ToggleDoor.lua");
+  const content = document.getElementById("doorOutput").textContent.trim();
+  console.log("ToggleDoor Download clicked. Content length:", content.length);
+  if (!content) {
+    alert("Please generate the Toggle Door script before downloading.");
+    return;
+  }
+  downloadScript(content, "ToggleDoor.lua");
 });
 
 // ==== Power-Up Pickup ====
@@ -137,11 +169,19 @@ document.getElementById("generatePowerUp").addEventListener("click", () => {
   const script = fillTemplate(powerUpTemplate, { name, duration });
   document.getElementById("powerUpOutput").textContent = script.trim();
 });
+
 document.getElementById("copyPowerUpScript").addEventListener("click", () => {
   copyTextToClipboard(document.getElementById("powerUpOutput").textContent.trim());
 });
+
 document.getElementById("downloadPowerUpScript").addEventListener("click", () => {
-  downloadScript(document.getElementById("powerUpOutput").textContent.trim(), "PowerUp.lua");
+  const content = document.getElementById("powerUpOutput").textContent.trim();
+  console.log("PowerUp Download clicked. Content length:", content.length);
+  if (!content) {
+    alert("Please generate the Power-Up script before downloading.");
+    return;
+  }
+  downloadScript(content, "PowerUp.lua");
 });
 
 // ==== Clipboard Copy Helper ====

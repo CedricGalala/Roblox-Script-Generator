@@ -62,11 +62,23 @@ function fillTemplate(template, values) {
   return template.replace(/{{(.*?)}}/g, (_, key) => values[key] || '');
 }
 
+function downloadScript(filename, content) {
+  const blob = new Blob([content], { type: 'text/plain' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = filename;
+  link.click();
+}
+
 // ==== Kill Brick ====
 document.getElementById("generateKillBrick").addEventListener("click", () => {
   const damage = document.getElementById("damageInput").value || "10";
   const script = fillTemplate(killBrickTemplate, { damage });
   document.getElementById("killOutput").textContent = script.trim();
+});
+document.getElementById("downloadKillScript").addEventListener("click", () => {
+  const script = document.getElementById("killOutput").textContent.trim();
+  if (script) downloadScript("KillBrick.lua", script);
 });
 
 // ==== Teleport Pad ====
@@ -77,12 +89,20 @@ document.getElementById("generateTeleport").addEventListener("click", () => {
   const script = fillTemplate(teleportTemplate, { x, y, z });
   document.getElementById("teleportOutput").textContent = script.trim();
 });
+document.getElementById("downloadTeleportScript").addEventListener("click", () => {
+  const script = document.getElementById("teleportOutput").textContent.trim();
+  if (script) downloadScript("TeleportPad.lua", script);
+});
 
 // ==== Spinner Part ====
 document.getElementById("generateSpinner").addEventListener("click", () => {
   const speed = document.getElementById("spinSpeedInput").value || "60";
   const script = fillTemplate(spinnerTemplate, { speed });
   document.getElementById("spinnerOutput").textContent = script.trim();
+});
+document.getElementById("downloadSpinnerScript").addEventListener("click", () => {
+  const script = document.getElementById("spinnerOutput").textContent.trim();
+  if (script) downloadScript("SpinnerPart.lua", script);
 });
 
 // ==== Toggle Door ====
@@ -93,6 +113,10 @@ document.getElementById("generateDoor").addEventListener("click", () => {
   const script = fillTemplate(toggleDoorTemplate, { x, y, z });
   document.getElementById("doorOutput").textContent = script.trim();
 });
+document.getElementById("downloadDoorScript").addEventListener("click", () => {
+  const script = document.getElementById("doorOutput").textContent.trim();
+  if (script) downloadScript("ToggleDoor.lua", script);
+});
 
 // ==== Power-Up Pickup ====
 document.getElementById("generatePowerUp").addEventListener("click", () => {
@@ -100,6 +124,10 @@ document.getElementById("generatePowerUp").addEventListener("click", () => {
   const duration = document.getElementById("powerUpDurationInput").value || "10";
   const script = fillTemplate(powerUpTemplate, { name, duration });
   document.getElementById("powerUpOutput").textContent = script.trim();
+});
+document.getElementById("downloadPowerUpScript").addEventListener("click", () => {
+  const script = document.getElementById("powerUpOutput").textContent.trim();
+  if (script) downloadScript("PowerUp.lua", script);
 });
 
 // ==== Clipboard Copy Helper ====

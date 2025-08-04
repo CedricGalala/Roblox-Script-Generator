@@ -1,215 +1,143 @@
-window.addEventListener('DOMContentLoaded', () => {
-
-// ==== Templates ====
-const templates = {
-  // ==== Touch-Based Scripts ====
-  killBrick: {
-    category: "Touch-Based Scripts",
-    template: `
+// --- Configuration ---
+const generators = [
+  // Effects
+  {
+    category: "Effects",
+    name: "Explosion Trigger",
+    inputs: ["Explosion Power"],
+    generate: ({"Explosion Power": power}) => `
 script.Parent.Touched:Connect(function(hit)
-    local humanoid = hit.Parent:FindFirstChild("Humanoid")
-    if humanoid then
-        humanoid:TakeDamage({{damage}})
-    end
+  local explosion = Instance.new("Explosion")
+  explosion.Position = script.Parent.Position
+  explosion.BlastRadius = ${power}
+  explosion.Parent = workspace
 end)
-    `
+    `.trim()
   },
-  teleport: {
-    category: "Touch-Based Scripts",
-    template: `
+  {
+    category: "Effects",
+    name: "Speed Boost Pad",
+    inputs: ["Boost Speed", "Boost Duration (seconds)", "Original Speed"],
+    generate: ({"Boost Speed": b, "Boost Duration (seconds)": d, "Original Speed": o}) => `
 script.Parent.Touched:Connect(function(hit)
-    local character = hit.Parent
-    if character:FindFirstChild("HumanoidRootPart") then
-        character:MoveTo(Vector3.new({{x}}, {{y}}, {{z}}))
-    end
+  local human = hit.Parent:FindFirstChild("Humanoid")
+  if human then
+    local originalSpeed = ${o}
+    human.WalkSpeed = ${b}
+    task.delay(${d}, function()
+      human.WalkSpeed = originalSpeed
+    end)
+  end
 end)
-    `
+    `.trim()
   },
-  powerUp: {
-    category: "Touch-Based Scripts",
-    template: `
-local powerUpName = "{{name}}"
-local duration = {{duration}}
-
+  {
+    category: "UI",
+    name: "Message Popup (BillboardGui)",
+    inputs: ["Message Text"],
+    generate: ({"Message Text": text}) => `
+local gui = Instance.new("BillboardGui")
+local label = Instance.new("TextLabel")
+label.Text = "${text}"
+label.Size = UDim2.new(1, 0, 1, 0)
+label.BackgroundTransparency = 1
+label.TextColor3 = Color3.new(1, 1, 1)
+label.TextScaled = true
+gui.Size = UDim2.new(0, 200, 0, 50)
+gui.AlwaysOnTop = true
+gui.Adornee = script.Parent
+gui.Parent = script.Parent
+label.Parent = gui
+    `.trim()
+  },
+  // Movement
+  {
+    category: "Movement",
+    name: "Jump Pad",
+    inputs: ["Jump Power"],
+    generate: ({"Jump Power": jp}) => `
 script.Parent.Touched:Connect(function(hit)
-    local player = game.Players:GetPlayerFromCharacter(hit.Parent)
-    if player then
-        print(player.Name .. " picked up " .. powerUpName)
-        -- Apply power-up effect here
-        wait(duration)
-        print(powerUpName .. " expired for " .. player.Name)
-    end
+  local hrp = hit.Parent:FindFirstChild("HumanoidRootPart")
+  if hrp then
+    hrp.Velocity = Vector3.new(0, ${jp}, 0)
+  end
 end)
-    `
+    `.trim()
   },
-  speedBoost: {
-    category: "Touch-Based Scripts",
-    template: `
-local speedBoost = {{speed}}
-local duration = {{duration}}
-
-script.Parent.Touched:Connect(function(hit)
-    local humanoid = hit.Parent:FindFirstChild("Humanoid")
-    if humanoid then
-        local originalSpeed = humanoid.WalkSpeed
-        humanoid.WalkSpeed = speedBoost
-        wait(duration)
-        humanoid.WalkSpeed = originalSpeed
-    end
-end)
-    `
-  },
-  explosionTrigger: {
-    category: "Touch-Based Scripts",
-    template: `
-script.Parent.Touched:Connect(function(hit)
-    local explosion = Instance.new("Explosion")
-    explosion.Position = script.Parent.Position
-    explosion.BlastRadius = {{radius}}
-    explosion.BlastPressure = {{pressure}}
-    explosion.Parent = workspace
-end)
-    `
-  },
-
-  // ==== Movement-Based Scripts ====
-  jumpPad: {
-    category: "Movement-Based Scripts",
-    template: `
-script.Parent.Touched:Connect(function(hit)
-    local humanoidRootPart = hit.Parent:FindFirstChild("HumanoidRootPart")
-    if humanoidRootPart then
-        humanoidRootPart.Velocity = Vector3.new(0, {{force}}, 0)
-    end
-end)
-    `
-  },
-
-  // ==== UI/Feedback Scripts ====
-  messagePopup: {
-    category: "UI/Feedback Scripts",
-    template: `
-local billboard = Instance.new("BillboardGui")
-local textLabel = Instance.new("TextLabel")
-
-billboard.Adornee = script.Parent
-billboard.Size = UDim2.new(0, 200, 0, 50)
-billboard.StudsOffset = Vector3.new(0, 3, 0)
-billboard.AlwaysOnTop = true
-
-textLabel.Size = UDim2.new(1, 0, 1, 0)
-textLabel.Text = "{{message}}"
-textLabel.BackgroundTransparency = 1
-textLabel.TextColor3 = Color3.new(1, 1, 1)
-textLabel.TextScaled = true
-textLabel.Parent = billboard
-
-billboard.Parent = script.Parent
-    `
-  },
-
-  // ==== Interaction Scripts ====
-  toggleDoor: {
-    category: "Interaction Scripts",
-    template: `
-local door = script.Parent
-local openPos = Vector3.new({{x}}, {{y}}, {{z}})
-local closedPos = door.Position
-local open = false
-
-door.Touched:Connect(function(hit)
-    if hit.Parent:FindFirstChild("Humanoid") then
-        if open then
-            door.Position = closedPos
-            open = false
-        else
-            door.Position = openPos
-            open = true
-        end
-    end
-end)
-    `
-  },
-  proximityPrompt: {
-    category: "Interaction Scripts",
-    template: `
+  // Interaction
+  {
+    category: "Interaction",
+    name: "Proximity Prompt Action",
+    inputs: ["Prompt Text", "Action Script"],
+    generate: ({"Prompt Text": t, "Action Script": s}) => `
 local prompt = Instance.new("ProximityPrompt")
-prompt.ActionText = "{{action}}"
-prompt.ObjectText = "{{object}}"
-prompt.RequiresLineOfSight = false
-prompt.MaxActivationDistance = 10
+prompt.ActionText = "${t}"
+prompt.ObjectText = "Interact"
 prompt.Parent = script.Parent
-
 prompt.Triggered:Connect(function(player)
-    print(player.Name .. " triggered the action!")
-    -- Add your custom logic here
+  ${s}
 end)
-    `
+    `.trim()
   }
-};
+];
 
-// ==== Helper Functions ====
-function fillTemplate(template, values) {
-  return template.replace(/{{(.*?)}}/g, (_, key) => values[key] || '');
-}
+// --- Page Setup ---
+const container = document.getElementById("generatorsContainer");
+const categories = [...new Set(generators.map(g => g.category))];
 
-function downloadScript(content, filename) {
-  const blob = new Blob([content], { type: 'text/plain' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-}
+categories.forEach(cat => {
+  const section = document.createElement("div");
+  section.className = "category";
+  section.innerHTML = `<h2>${cat}</h2>`;
 
-function copyTextToClipboard(text) {
-  if (!text) {
-    alert("Nothing to copy! Please generate a script first.");
-    return;
-  }
+  generators.filter(g => g.category === cat).forEach(gen => {
+    const div = document.createElement("div");
+    div.className = "generator";
 
-  if (navigator.clipboard && window.isSecureContext) {
-    navigator.clipboard.writeText(text).then(() => {
-      alert("Script copied to clipboard!");
-    }).catch(() => {
-      alert("Failed to copy. Try again.");
-    });
-  } else {
-    const textArea = document.createElement("textarea");
-    textArea.value = text;
-    textArea.style.position = "fixed";
-    textArea.style.top = "-9999px";
-    document.body.appendChild(textArea);
-    textArea.focus();
-    textArea.select();
-    try {
-      document.execCommand("copy");
-      alert("Script copied to clipboard!");
-    } catch {
-      alert("Failed to copy. Try again.");
-    }
-    document.body.removeChild(textArea);
-  }
-}
+    div.innerHTML = `
+      <h3>${gen.name}</h3>
+      <div class="form-group">
+        ${gen.inputs.map(input => `
+          <label>${input}: <input type="text" data-input="${input}"/></label><br>
+        `).join('')}
+      </div>
+      <button class="generate">Generate</button>
+      <button class="download">Download .lua</button>
+      <pre><code class="output"></code></pre>
+    `;
 
-// ==== Dark Mode Toggle ====
-const darkModeToggle = document.getElementById("darkModeToggle");
+    div.querySelector(".generate").onclick = () => {
+      const inputs = {};
+      div.querySelectorAll("[data-input]").forEach(inp => {
+        inputs[inp.dataset.input] = inp.value;
+      });
+      try {
+        const code = gen.generate(inputs);
+        div.querySelector(".output").textContent = code;
+      } catch (e) {
+        div.querySelector(".output").textContent = "Error: Invalid input.";
+      }
+    };
 
-function setDarkMode(enabled) {
-  document.body.classList.toggle("dark-mode", enabled);
-  darkModeToggle.textContent = enabled ? "☀️ Light Mode" : "🌙 Dark Mode";
-  localStorage.setItem("darkMode", enabled ? "true" : "false");
-}
+    div.querySelector(".download").onclick = () => {
+      const code = div.querySelector(".output").textContent;
+      const blob = new Blob([code], {type: 'text/plain'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = gen.name.replace(/\s+/g, '_') + ".lua";
+      a.click();
+      URL.revokeObjectURL(url);
+    };
 
-const savedMode = localStorage.getItem("darkMode") === "true";
-setDarkMode(savedMode);
-
-darkModeToggle.addEventListener("click", () => {
-  const enabled = !document.body.classList.contains("dark-mode");
-  setDarkMode(enabled);
+    section.appendChild(div);
+  });
+  container.appendChild(section);
 });
 
-}); // end DOMContentLoaded
+// --- Dark Mode Toggle ---
+document.getElementById("darkModeToggle").onclick = () => {
+  document.body.classList.toggle("dark-mode");
+  const toggle = document.getElementById("darkModeToggle");
+  toggle.textContent = document.body.classList.contains("dark-mode") ? "☀️ Light Mode" : "🌙 Dark Mode";
+};

@@ -2,7 +2,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
 // ==== Templates ====
 const templates = {
-  // Touch-Based Scripts
+  // ==== Touch-Based Scripts ====
   killBrick: {
     category: "Touch-Based Scripts",
     template: `
@@ -72,17 +72,20 @@ end)
     `
   },
 
-  // Loop/Continuous Scripts
-  spinner: {
-    category: "Loop/Continuous Scripts",
+  // ==== Movement-Based Scripts ====
+  jumpPad: {
+    category: "Movement-Based Scripts",
     template: `
-while true do
-    script.Parent.CFrame = script.Parent.CFrame * CFrame.Angles(0, math.rad({{speed}}) * wait(), 0)
-end
+script.Parent.Touched:Connect(function(hit)
+    local humanoidRootPart = hit.Parent:FindFirstChild("HumanoidRootPart")
+    if humanoidRootPart then
+        humanoidRootPart.Velocity = Vector3.new(0, {{force}}, 0)
+    end
+end)
     `
   },
 
-  // UI/Feedback Scripts
+  // ==== UI/Feedback Scripts ====
   messagePopup: {
     category: "UI/Feedback Scripts",
     template: `
@@ -105,7 +108,7 @@ billboard.Parent = script.Parent
     `
   },
 
-  // Interaction Scripts
+  // ==== Interaction Scripts ====
   toggleDoor: {
     category: "Interaction Scripts",
     template: `
@@ -140,19 +143,6 @@ prompt.Parent = script.Parent
 prompt.Triggered:Connect(function(player)
     print(player.Name .. " triggered the action!")
     -- Add your custom logic here
-end)
-    `
-  },
-
-  // Movement-Based Scripts
-  jumpPad: {
-    category: "Movement-Based Scripts",
-    template: `
-script.Parent.Touched:Connect(function(hit)
-    local humanoidRootPart = hit.Parent:FindFirstChild("HumanoidRootPart")
-    if humanoidRootPart then
-        humanoidRootPart.Velocity = Vector3.new(0, {{force}}, 0)
-    end
 end)
     `
   }

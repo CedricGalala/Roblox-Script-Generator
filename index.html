@@ -6,63 +6,58 @@
   <title>Roblox Script Generator</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-      background: #f2f2f2;
-      color: #222;
-      transition: background 0.3s, color 0.3s;
+      font-family: sans-serif;
+      background: #f5f5f5;
+      color: #333;
+      padding: 1em;
     }
-    .dark-mode {
+    body.dark-mode {
       background: #121212;
       color: #eee;
     }
     h1 {
       text-align: center;
     }
-    .category {
-      margin-top: 30px;
-    }
-    .generator {
-      border: 1px solid #ccc;
-      padding: 15px;
-      margin-bottom: 20px;
+    .generator, .category {
+      margin: 1em auto;
+      padding: 1em;
+      background: white;
       border-radius: 8px;
-      background: #fff;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
-    .dark-mode .generator {
-      background: #1f1f1f;
-      border-color: #444;
+    body.dark-mode .generator, body.dark-mode .category {
+      background: #1e1e1e;
     }
-    .form-group {
-      margin-bottom: 10px;
-    }
-    button {
-      margin-top: 10px;
-      margin-right: 5px;
-      padding: 6px 10px;
-      cursor: pointer;
+    .form-group label {
+      display: block;
+      margin-top: 0.5em;
     }
     pre {
-      background: #eee;
-      padding: 10px;
-      border-radius: 5px;
+      background: #f0f0f0;
+      padding: 1em;
       overflow-x: auto;
+      border-radius: 4px;
     }
-    .dark-mode pre {
-      background: #2e2e2e;
+    body.dark-mode pre {
+      background: #2b2b2b;
+    }
+    button {
+      margin-top: 0.5em;
+      margin-right: 0.5em;
+      padding: 0.4em 1em;
+      border: none;
+      border-radius: 4px;
+      background: #007bff;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
     }
     #darkModeToggle {
       position: fixed;
-      top: 10px;
-      right: 10px;
-      padding: 5px 10px;
-      border-radius: 5px;
-      background-color: #ddd;
-      cursor: pointer;
-    }
-    .dark-mode #darkModeToggle {
-      background-color: #333;
-      color: #fff;
+      top: 1em;
+      right: 1em;
     }
   </style>
 </head>
@@ -70,6 +65,7 @@
   <h1>Roblox Script Generator</h1>
   <button id="darkModeToggle">🌙 Dark Mode</button>
   <div id="generatorsContainer"></div>
+
   <script src="script.js"></script>
 </body>
 </html>

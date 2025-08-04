@@ -1,31 +1,114 @@
 window.addEventListener('DOMContentLoaded', () => {
 
 // ==== Templates ====
-const killBrickTemplate = `
+const templates = {
+  // Touch-Based Scripts
+  killBrick: {
+    category: "Touch-Based Scripts",
+    template: `
 script.Parent.Touched:Connect(function(hit)
     local humanoid = hit.Parent:FindFirstChild("Humanoid")
     if humanoid then
         humanoid:TakeDamage({{damage}})
     end
 end)
-`;
-
-const teleportTemplate = `
+    `
+  },
+  teleport: {
+    category: "Touch-Based Scripts",
+    template: `
 script.Parent.Touched:Connect(function(hit)
     local character = hit.Parent
     if character:FindFirstChild("HumanoidRootPart") then
         character:MoveTo(Vector3.new({{x}}, {{y}}, {{z}}))
     end
 end)
-`;
+    `
+  },
+  powerUp: {
+    category: "Touch-Based Scripts",
+    template: `
+local powerUpName = "{{name}}"
+local duration = {{duration}}
 
-const spinnerTemplate = `
+script.Parent.Touched:Connect(function(hit)
+    local player = game.Players:GetPlayerFromCharacter(hit.Parent)
+    if player then
+        print(player.Name .. " picked up " .. powerUpName)
+        -- Apply power-up effect here
+        wait(duration)
+        print(powerUpName .. " expired for " .. player.Name)
+    end
+end)
+    `
+  },
+  speedBoost: {
+    category: "Touch-Based Scripts",
+    template: `
+local speedBoost = {{speed}}
+local duration = {{duration}}
+
+script.Parent.Touched:Connect(function(hit)
+    local humanoid = hit.Parent:FindFirstChild("Humanoid")
+    if humanoid then
+        local originalSpeed = humanoid.WalkSpeed
+        humanoid.WalkSpeed = speedBoost
+        wait(duration)
+        humanoid.WalkSpeed = originalSpeed
+    end
+end)
+    `
+  },
+  explosionTrigger: {
+    category: "Touch-Based Scripts",
+    template: `
+script.Parent.Touched:Connect(function(hit)
+    local explosion = Instance.new("Explosion")
+    explosion.Position = script.Parent.Position
+    explosion.BlastRadius = {{radius}}
+    explosion.BlastPressure = {{pressure}}
+    explosion.Parent = workspace
+end)
+    `
+  },
+
+  // Loop/Continuous Scripts
+  spinner: {
+    category: "Loop/Continuous Scripts",
+    template: `
 while true do
     script.Parent.CFrame = script.Parent.CFrame * CFrame.Angles(0, math.rad({{speed}}) * wait(), 0)
 end
-`;
+    `
+  },
 
-const toggleDoorTemplate = `
+  // UI/Feedback Scripts
+  messagePopup: {
+    category: "UI/Feedback Scripts",
+    template: `
+local billboard = Instance.new("BillboardGui")
+local textLabel = Instance.new("TextLabel")
+
+billboard.Adornee = script.Parent
+billboard.Size = UDim2.new(0, 200, 0, 50)
+billboard.StudsOffset = Vector3.new(0, 3, 0)
+billboard.AlwaysOnTop = true
+
+textLabel.Size = UDim2.new(1, 0, 1, 0)
+textLabel.Text = "{{message}}"
+textLabel.BackgroundTransparency = 1
+textLabel.TextColor3 = Color3.new(1, 1, 1)
+textLabel.TextScaled = true
+textLabel.Parent = billboard
+
+billboard.Parent = script.Parent
+    `
+  },
+
+  // Interaction Scripts
+  toggleDoor: {
+    category: "Interaction Scripts",
+    template: `
 local door = script.Parent
 local openPos = Vector3.new({{x}}, {{y}}, {{z}})
 local closedPos = door.Position
@@ -42,24 +125,40 @@ door.Touched:Connect(function(hit)
         end
     end
 end)
-`;
+    `
+  },
+  proximityPrompt: {
+    category: "Interaction Scripts",
+    template: `
+local prompt = Instance.new("ProximityPrompt")
+prompt.ActionText = "{{action}}"
+prompt.ObjectText = "{{object}}"
+prompt.RequiresLineOfSight = false
+prompt.MaxActivationDistance = 10
+prompt.Parent = script.Parent
 
-const powerUpTemplate = `
-local powerUpName = "{{name}}"
-local duration = {{duration}}
+prompt.Triggered:Connect(function(player)
+    print(player.Name .. " triggered the action!")
+    -- Add your custom logic here
+end)
+    `
+  },
 
+  // Movement-Based Scripts
+  jumpPad: {
+    category: "Movement-Based Scripts",
+    template: `
 script.Parent.Touched:Connect(function(hit)
-    local player = game.Players:GetPlayerFromCharacter(hit.Parent)
-    if player then
-        print(player.Name .. " picked up " .. powerUpName)
-        -- Apply power-up effect here
-        wait(duration)
-        print(powerUpName .. " expired for " .. player.Name)
+    local humanoidRootPart = hit.Parent:FindFirstChild("HumanoidRootPart")
+    if humanoidRootPart then
+        humanoidRootPart.Velocity = Vector3.new(0, {{force}}, 0)
     end
 end)
-`;
+    `
+  }
+};
 
-// ==== Helper Function ====
+// ==== Helper Functions ====
 function fillTemplate(template, values) {
   return template.replace(/{{(.*?)}}/g, (_, key) => values[key] || '');
 }
@@ -76,102 +175,6 @@ function downloadScript(content, filename) {
   URL.revokeObjectURL(url);
 }
 
-// ==== Kill Brick ====
-document.getElementById("generateKillBrick").addEventListener("click", () => {
-  const damage = document.getElementById("damageInput").value || "10";
-  const script = fillTemplate(killBrickTemplate, { damage });
-  document.getElementById("killOutput").textContent = script.trim();
-});
-document.getElementById("copyKillScript").addEventListener("click", () => {
-  copyTextToClipboard(document.getElementById("killOutput").textContent.trim());
-});
-document.getElementById("downloadKillScript").addEventListener("click", () => {
-  const content = document.getElementById("killOutput").textContent.trim();
-  if (!content) {
-    alert("Please generate the Kill Brick script before downloading.");
-    return;
-  }
-  downloadScript(content, "KillBrick.lua");
-});
-
-// ==== Teleport Pad ====
-document.getElementById("generateTeleport").addEventListener("click", () => {
-  const x = document.getElementById("xInput").value || "0";
-  const y = document.getElementById("yInput").value || "10";
-  const z = document.getElementById("zInput").value || "0";
-  const script = fillTemplate(teleportTemplate, { x, y, z });
-  document.getElementById("teleportOutput").textContent = script.trim();
-});
-document.getElementById("copyTeleportScript").addEventListener("click", () => {
-  copyTextToClipboard(document.getElementById("teleportOutput").textContent.trim());
-});
-document.getElementById("downloadTeleportScript").addEventListener("click", () => {
-  const content = document.getElementById("teleportOutput").textContent.trim();
-  if (!content) {
-    alert("Please generate the Teleport Pad script before downloading.");
-    return;
-  }
-  downloadScript(content, "TeleportPad.lua");
-});
-
-// ==== Spinner Part ====
-document.getElementById("generateSpinner").addEventListener("click", () => {
-  const speed = document.getElementById("spinSpeedInput").value || "60";
-  const script = fillTemplate(spinnerTemplate, { speed });
-  document.getElementById("spinnerOutput").textContent = script.trim();
-});
-document.getElementById("copySpinnerScript").addEventListener("click", () => {
-  copyTextToClipboard(document.getElementById("spinnerOutput").textContent.trim());
-});
-document.getElementById("downloadSpinnerScript").addEventListener("click", () => {
-  const content = document.getElementById("spinnerOutput").textContent.trim();
-  if (!content) {
-    alert("Please generate the Spinner script before downloading.");
-    return;
-  }
-  downloadScript(content, "Spinner.lua");
-});
-
-// ==== Toggle Door ====
-document.getElementById("generateDoor").addEventListener("click", () => {
-  const x = document.getElementById("doorXInput").value || "0";
-  const y = document.getElementById("doorYInput").value || "10";
-  const z = document.getElementById("doorZInput").value || "0";
-  const script = fillTemplate(toggleDoorTemplate, { x, y, z });
-  document.getElementById("doorOutput").textContent = script.trim();
-});
-document.getElementById("copyDoorScript").addEventListener("click", () => {
-  copyTextToClipboard(document.getElementById("doorOutput").textContent.trim());
-});
-document.getElementById("downloadDoorScript").addEventListener("click", () => {
-  const content = document.getElementById("doorOutput").textContent.trim();
-  if (!content) {
-    alert("Please generate the Toggle Door script before downloading.");
-    return;
-  }
-  downloadScript(content, "ToggleDoor.lua");
-});
-
-// ==== Power-Up Pickup ====
-document.getElementById("generatePowerUp").addEventListener("click", () => {
-  const name = document.getElementById("powerUpNameInput").value.trim() || "SpeedBoost";
-  const duration = document.getElementById("powerUpDurationInput").value || "10";
-  const script = fillTemplate(powerUpTemplate, { name, duration });
-  document.getElementById("powerUpOutput").textContent = script.trim();
-});
-document.getElementById("copyPowerUpScript").addEventListener("click", () => {
-  copyTextToClipboard(document.getElementById("powerUpOutput").textContent.trim());
-});
-document.getElementById("downloadPowerUpScript").addEventListener("click", () => {
-  const content = document.getElementById("powerUpOutput").textContent.trim();
-  if (!content) {
-    alert("Please generate the Power-Up script before downloading.");
-    return;
-  }
-  downloadScript(content, "PowerUp.lua");
-});
-
-// ==== Clipboard Copy Helper ====
 function copyTextToClipboard(text) {
   if (!text) {
     alert("Nothing to copy! Please generate a script first.");

@@ -1,137 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Roblox Script Generator</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-      background-color: #f7f7f7;
-      color: #222;
-      transition: background-color 0.3s, color 0.3s;
-    }
-    body.dark-mode {
-      background-color: #121212;
-      color: #ddd;
-    }
-    #darkModeToggle {
-      cursor: pointer;
-      margin-bottom: 20px;
-      font-size: 1.2rem;
-      user-select: none;
-    }
-    .category {
-      cursor: pointer;
-      padding: 8px;
-      background: #ccc;
-      margin-bottom: 4px;
-      display: flex;
-      align-items: center;
-      border-radius: 4px;
-      user-select: none;
-    }
-    body.dark-mode .category {
-      background: #333;
-    }
-    .category-arrow {
-      display: inline-block;
-      margin-right: 8px;
-      transition: transform 0.3s ease;
-      user-select: none;
-    }
-    .category-arrow.open {
-      transform: rotate(90deg);
-    }
-    .category-title {
-      flex-grow: 1;
-    }
-    .generators {
-      margin-bottom: 20px;
-      margin-left: 24px;
-    }
-    .generator {
-      border: 1px solid #aaa;
-      padding: 10px;
-      margin-bottom: 15px;
-      background: white;
-      border-radius: 6px;
-    }
-    body.dark-mode .generator {
-      background: #222;
-      border-color: #555;
-    }
-    form > div {
-      margin-bottom: 8px;
-    }
-    label {
-      display: block;
-      margin-bottom: 4px;
-      font-weight: bold;
-    }
-    input[type="text"] {
-      width: 100%;
-      padding: 6px;
-      border-radius: 4px;
-      border: 1px solid #aaa;
-      box-sizing: border-box;
-    }
-    body.dark-mode input[type="text"] {
-      background: #333;
-      border-color: #555;
-      color: #ddd;
-    }
-    pre {
-      background: #eee;
-      padding: 10px;
-      white-space: pre-wrap;
-      word-wrap: break-word;
-      border-radius: 6px;
-      max-height: 220px;
-      overflow-y: auto;
-      font-family: Consolas, monospace;
-      margin-bottom: 10px;
-    }
-    body.dark-mode pre {
-      background: #111;
-      color: #eee;
-    }
-    .buttons {
-      display: flex;
-      gap: 10px;
-    }
-    button {
-      cursor: pointer;
-      padding: 6px 12px;
-      border-radius: 5px;
-      border: none;
-      background-color: #1976d2;
-      color: white;
-      font-weight: bold;
-      transition: background-color 0.2s;
-      user-select: none;
-    }
-    button:hover {
-      background-color: #115293;
-    }
-    button.copy-btn {
-      background-color: #4caf50;
-    }
-    button.copy-btn:hover {
-      background-color: #357a38;
-    }
-    button.download-btn {
-      background-color: #ff9800;
-      color: #222;
-    }
-    button.download-btn:hover {
-      background-color: #b26a00;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Roblox Script Generator</title>
+<style>
+  body {
+    font-family: sans-serif;
+    background: #f5f5f5;
+    color: #333;
+    padding: 1em;
+  }
+  body.dark-mode {
+    background: #121212;
+    color: #eee;
+  }
+  h1 {
+    text-align: center;
+  }
+  .category {
+    margin: 1em auto;
+    padding: 1em;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  body.dark-mode .category {
+    background: #1e1e1e;
+  }
+  .category-arrow {
+    font-weight: bold;
+    transition: transform 0.3s ease;
+  }
+  .category-arrow.open {
+    transform: rotate(90deg);
+  }
+  .generators {
+    margin: 0 2em 2em 2em;
+  }
+  .generator {
+    padding: 1em;
+    background: #f9f9f9;
+    border-radius: 6px;
+    margin-bottom: 1em;
+  }
+  body.dark-mode .generator {
+    background: #2b2b2b;
+  }
+  pre {
+    background: #f0f0f0;
+    padding: 1em;
+    overflow-x: auto;
+    border-radius: 4px;
+  }
+  body.dark-mode pre {
+    background: #2b2b2b;
+  }
+  button {
+    margin-top: 0.5em;
+    margin-right: 0.5em;
+    padding: 0.4em 1em;
+    border: none;
+    border-radius: 4px;
+    background: #007bff;
+    color: white;
+    cursor: pointer;
+  }
+  button:hover {
+    background: #0056b3;
+  }
+  #darkModeToggle {
+    position: fixed;
+    top: 1em;
+    right: 1em;
+  }
+  label {
+    display: block;
+    margin-top: 0.5em;
+  }
+  input {
+    width: 100%;
+    padding: 0.3em;
+    margin-top: 0.2em;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+</style>
 </head>
 <body>
-  <div id="darkModeToggle" title="Toggle Dark Mode">🌙 Toggle Dark Mode</div>
+  <h1>Roblox Script Generator</h1>
+  <button id="darkModeToggle">🌙 Dark Mode</button>
   <div id="categoriesContainer"></div>
 
   <script src="script.js"></script>

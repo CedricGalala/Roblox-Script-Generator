@@ -143,12 +143,12 @@ function createInput(field) {
 
   const label = document.createElement("label");
   label.textContent = field.label + ": ";
-  label.htmlFor = "input_" + field.name;
+  label.htmlFor = "input_" + field.name + "_" + Math.random().toString(36).slice(2);
   wrapper.appendChild(label);
 
   const input = document.createElement("input");
   input.type = "text";
-  input.id = "input_" + field.name;
+  input.id = label.htmlFor;
   input.name = field.name;
   input.required = true;
   input.style.width = "100%";
@@ -311,23 +311,19 @@ generators.forEach(cat => {
 const darkModeToggle = document.getElementById("darkModeToggle");
 darkModeToggle.addEventListener("click", () => {
   document.body.classList.toggle("dark-mode");
-  // Change button emoji
   if (document.body.classList.contains("dark-mode")) {
-    darkModeToggle.textContent = "☀️";
-  } else {
-    darkModeToggle.textContent = "🌙";
-  }
-});
-
-// Optional: remember dark mode preference in localStorage
-if (localStorage.getItem("darkMode") === "enabled") {
-  document.body.classList.add("dark-mode");
-  darkModeToggle.textContent = "☀️";
-}
-darkModeToggle.addEventListener("click", () => {
-  if (document.body.classList.contains("dark-mode")) {
+    darkModeToggle.textContent = "☀️ Toggle Dark Mode";
     localStorage.setItem("darkMode", "enabled");
   } else {
+    darkModeToggle.textContent = "🌙 Toggle Dark Mode";
     localStorage.setItem("darkMode", "disabled");
   }
 });
+
+// Load dark mode preference
+if (localStorage.getItem("darkMode") === "enabled") {
+  document.body.classList.add("dark-mode");
+  darkModeToggle.textContent = "☀️ Toggle Dark Mode";
+} else {
+  darkModeToggle.textContent = "🌙 Toggle Dark Mode";
+}

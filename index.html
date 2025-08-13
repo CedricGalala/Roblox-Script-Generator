@@ -18,19 +18,32 @@
     h1 {
       text-align: center;
     }
-    .generator, .category {
+    .category {
       margin: 1em auto;
       padding: 1em;
       background: white;
       border-radius: 8px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      cursor: pointer;
     }
-    body.dark-mode .generator, body.dark-mode .category {
+    body.dark-mode .category {
       background: #1e1e1e;
     }
-    .form-group label {
-      display: block;
-      margin-top: 0.5em;
+    .category h2 {
+      margin: 0;
+    }
+    .generators {
+      display: none;
+      margin-top: 1em;
+    }
+    .generator {
+      padding: 1em;
+      background: #f9f9f9;
+      border-radius: 6px;
+      margin-bottom: 1em;
+    }
+    body.dark-mode .generator {
+      background: #2b2b2b;
     }
     pre {
       background: #f0f0f0;
@@ -64,7 +77,7 @@
 <body>
   <h1>Roblox Script Generator</h1>
   <button id="darkModeToggle">🌙 Dark Mode</button>
-  <div id="generatorsContainer"></div>
+  <div id="categoriesContainer"></div>
 
   <script src="script.js"></script>
 </body>

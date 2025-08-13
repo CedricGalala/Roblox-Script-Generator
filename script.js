@@ -1,4 +1,4 @@
-// All generators (fixed and improved), grouped by category:
+// All generators (original + new), grouped by category:
 const generators = [
   {
     category: "Effects",
@@ -10,7 +10,7 @@ const generators = [
 script.Parent.Touched:Connect(function(hit)
   local humanoid = hit.Parent:FindFirstChild("Humanoid")
   if humanoid then
-    humanoid:TakeDamage(tonumber(${damage}))
+    humanoid:TakeDamage(${damage})
   end
 end)
 `.trim()
@@ -22,7 +22,7 @@ end)
 script.Parent.Touched:Connect(function(hit)
   local explosion = Instance.new("Explosion")
   explosion.Position = script.Parent.Position
-  explosion.BlastRadius = tonumber(${power})
+  explosion.BlastRadius = ${power}
   explosion.Parent = workspace
 end)
 `.trim()
@@ -37,10 +37,10 @@ end)
         fields: [{ name: "force", label: "Jump Force" }],
         generate: ({ force }) => `
 script.Parent.Touched:Connect(function(hit)
-  local humanoid = hit.Parent:FindFirstChild("Humanoid")
-  if humanoid then
-    humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
-    humanoid.JumpPower = tonumber(${force})
+  local human = hit.Parent:FindFirstChild("Humanoid")
+  if human then
+    human:ChangeState(Enum.HumanoidStateType.Jumping)
+    human.JumpPower = ${force}
   end
 end)
 `.trim()
@@ -49,18 +49,17 @@ end)
         name: "Speed Boost Pad",
         fields: [
           { name: "boostSpeed", label: "Boost Speed" },
-          { name: "boostDuration", label: "Boost Duration (seconds)" }
+          { name: "boostDuration", label: "Boost Duration (seconds)" },
+          { name: "originalSpeed", label: "Original Speed" }
         ],
-        generate: ({ boostSpeed, boostDuration }) => `
+        generate: ({ boostSpeed, boostDuration, originalSpeed }) => `
 script.Parent.Touched:Connect(function(hit)
-  local humanoid = hit.Parent:FindFirstChild("Humanoid")
-  if humanoid then
-    local originalSpeed = humanoid.WalkSpeed
-    humanoid.WalkSpeed = tonumber(${boostSpeed})
-    task.delay(tonumber(${boostDuration}), function()
-      if humanoid and humanoid.Parent then
-        humanoid.WalkSpeed = originalSpeed
-      end
+  local human = hit.Parent:FindFirstChild("Humanoid")
+  if human then
+    local originalSpeed = ${originalSpeed}
+    human.WalkSpeed = ${boostSpeed}
+    task.delay(${boostDuration}, function()
+      human.WalkSpeed = originalSpeed
     end)
   end
 end)
@@ -125,7 +124,7 @@ end)
 script.Parent.Touched:Connect(function(hit)
   local character = hit.Parent
   if character:FindFirstChild("Humanoid") then
-    character:SetPrimaryPartCFrame(CFrame.new(tonumber(${x}), tonumber(${y}), tonumber(${z})))
+    character:SetPrimaryPartCFrame(CFrame.new(${x}, ${y}, ${z}))
   end
 end)
 `.trim()
@@ -143,12 +142,12 @@ function createInput(field) {
 
   const label = document.createElement("label");
   label.textContent = field.label + ": ";
-  label.htmlFor = "input_" + field.name + "_" + Math.random().toString(36).slice(2);
+  label.htmlFor = "input_" + field.name;
   wrapper.appendChild(label);
 
   const input = document.createElement("input");
   input.type = "text";
-  input.id = label.htmlFor;
+  input.id = "input_" + field.name + Math.random().toString(36).substr(2, 5); // unique id to prevent duplicates
   input.name = field.name;
   input.required = true;
   input.style.width = "100%";
@@ -258,6 +257,9 @@ function createGeneratorElement(gen) {
   return genDiv;
 }
 
+let currentlyOpenGeneratorsDiv = null;
+let currentlyOpenArrow = null;
+
 function createCategoryElement(category) {
   const categoryDiv = document.createElement("div");
   categoryDiv.classList.add("category");
@@ -287,14 +289,27 @@ function createCategoryElement(category) {
   // Add generators container after category div
   categoryDiv.insertAdjacentElement("afterend", generatorsDiv);
 
-  // Toggle on click (categoryDiv only)
+  // Accordion toggle behavior:
   categoryDiv.addEventListener("click", () => {
     if (generatorsDiv.style.display === "none") {
+      // Close previously opened category
+      if (currentlyOpenGeneratorsDiv && currentlyOpenGeneratorsDiv !== generatorsDiv) {
+        currentlyOpenGeneratorsDiv.style.display = "none";
+      }
+      if (currentlyOpenArrow && currentlyOpenArrow !== arrow) {
+        currentlyOpenArrow.classList.remove("open");
+      }
+      // Open clicked category
       generatorsDiv.style.display = "block";
       arrow.classList.add("open");
+      currentlyOpenGeneratorsDiv = generatorsDiv;
+      currentlyOpenArrow = arrow;
     } else {
+      // Close clicked category if already open
       generatorsDiv.style.display = "none";
       arrow.classList.remove("open");
+      currentlyOpenGeneratorsDiv = null;
+      currentlyOpenArrow = null;
     }
   });
 
@@ -311,19 +326,23 @@ generators.forEach(cat => {
 const darkModeToggle = document.getElementById("darkModeToggle");
 darkModeToggle.addEventListener("click", () => {
   document.body.classList.toggle("dark-mode");
+  // Change button emoji
   if (document.body.classList.contains("dark-mode")) {
-    darkModeToggle.textContent = "☀️ Toggle Dark Mode";
-    localStorage.setItem("darkMode", "enabled");
+    darkModeToggle.textContent = "☀️";
   } else {
-    darkModeToggle.textContent = "🌙 Toggle Dark Mode";
-    localStorage.setItem("darkMode", "disabled");
+    darkModeToggle.textContent = "🌙";
   }
 });
 
-// Load dark mode preference
+// Remember dark mode preference
 if (localStorage.getItem("darkMode") === "enabled") {
   document.body.classList.add("dark-mode");
-  darkModeToggle.textContent = "☀️ Toggle Dark Mode";
-} else {
-  darkModeToggle.textContent = "🌙 Toggle Dark Mode";
+  darkModeToggle.textContent = "☀️";
 }
+darkModeToggle.addEventListener("click", () => {
+  if (document.body.classList.contains("dark-mode")) {
+    localStorage.setItem("darkMode", "enabled");
+  } else {
+    localStorage.setItem("darkMode", "disabled");
+  }
+});

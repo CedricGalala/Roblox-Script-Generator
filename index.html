@@ -1,1 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Roblox Script Generator</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; background: #f0f0f0; }
+    button { margin: 5px; padding: 10px; }
+    pre { background: #222; color: #0f0; padding: 15px; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <h1>Roblox Script Generator</h1>
+  <div id="buttons"></div>
+  <pre id="scriptOutput">Select a script above to see code here.</pre>
 
+  <script>
+    // Script templates
+    const scripts = {
+      "Speed Boost": `-- Speed Boost Script
+local speedBoost = 50
+game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = speedBoost`,
+      
+      "Jump Pad": `-- Jump Pad Script
+local jumpPower = 100
+game.Players.LocalPlayer.Character.Humanoid.JumpPower = jumpPower`,
+
+      "Message Popup": `-- Message Popup Script
+local message = Instance.new("Message")
+message.Text = "Hello, Roblox player!"
+message.Parent = game.Workspace
+wait(3)
+message:Destroy()`
+    };
+
+    const buttonsDiv = document.getElementById('buttons');
+    const output = document.getElementById('scriptOutput');
+
+    // Create a button for each script
+    for (const name in scripts) {
+      const btn = document.createElement('button');
+      btn.textContent = name;
+      btn.onclick = () => {
+        output.textContent = scripts[name];
+      };
+      buttonsDiv.appendChild(btn);
+    }
+  </script>
+</body>
+</html>

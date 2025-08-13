@@ -2,50 +2,98 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Roblox Script Generator</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 20px; background: #f0f0f0; }
-    button { margin: 5px; padding: 10px; }
-    pre { background: #222; color: #0f0; padding: 15px; white-space: pre-wrap; }
-  </style>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>Roblox Script Generator</h1>
-  <div id="buttons"></div>
-  <pre id="scriptOutput">Select a script above to see code here.</pre>
+  <header>
+    <h1>Roblox Script Generator</h1>
+    <p>Build scripts for Roblox Studio with a few clicks</p>
+    <button id="darkModeToggle" aria-label="Toggle Dark Mode">🌙 Dark Mode</button>
+  </header>
 
-  <script>
-    // Script templates
-    const scripts = {
-      "Speed Boost": `-- Speed Boost Script
-local speedBoost = 50
-game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = speedBoost`,
-      
-      "Jump Pad": `-- Jump Pad Script
-local jumpPower = 100
-game.Players.LocalPlayer.Character.Humanoid.JumpPower = jumpPower`,
+  <main>
+    <!-- Kill Brick Generator -->
+    <section class="tool" id="killBrickSection">
+      <h2>Kill Brick Generator</h2>
+      <label for="damageInput">Damage:</label>
+      <input type="number" id="damageInput" placeholder="10" />
+      <div class="button-row">
+        <button id="generateKillBrick">Generate Script</button>
+        <button id="copyKillScript">Copy Script</button>
+        <button id="downloadKillScript">Download .lua 📥</button>
+      </div>
+      <pre id="killOutput" class="code-box"></pre>
+    </section>
 
-      "Message Popup": `-- Message Popup Script
-local message = Instance.new("Message")
-message.Text = "Hello, Roblox player!"
-message.Parent = game.Workspace
-wait(3)
-message:Destroy()`
-    };
+    <!-- Teleport Pad Generator -->
+    <section class="tool" id="teleportPadSection">
+      <h2>Teleport Pad Generator</h2>
+      <label for="xInput">X:</label>
+      <input type="number" id="xInput" placeholder="0" />
+      <label for="yInput">Y:</label>
+      <input type="number" id="yInput" placeholder="10" />
+      <label for="zInput">Z:</label>
+      <input type="number" id="zInput" placeholder="0" />
+      <div class="button-row">
+        <button id="generateTeleport">Generate Script</button>
+        <button id="copyTeleportScript">Copy Script</button>
+        <button id="downloadTeleportScript">Download .lua 📥</button>
+      </div>
+      <pre id="teleportOutput" class="code-box"></pre>
+    </section>
 
-    const buttonsDiv = document.getElementById('buttons');
-    const output = document.getElementById('scriptOutput');
+    <!-- Spinner Part Generator -->
+    <section class="tool" id="spinnerSection">
+      <h2>Spinner Part Generator</h2>
+      <label for="spinSpeedInput">Rotation Speed (degrees/second):</label>
+      <input type="number" id="spinSpeedInput" placeholder="60" />
+      <div class="button-row">
+        <button id="generateSpinner">Generate Script</button>
+        <button id="copySpinnerScript">Copy Script</button>
+        <button id="downloadSpinnerScript">Download .lua 📥</button>
+      </div>
+      <pre id="spinnerOutput" class="code-box"></pre>
+    </section>
 
-    // Create a button for each script
-    for (const name in scripts) {
-      const btn = document.createElement('button');
-      btn.textContent = name;
-      btn.onclick = () => {
-        output.textContent = scripts[name];
-      };
-      buttonsDiv.appendChild(btn);
-    }
-  </script>
+    <!-- Toggle Door Generator -->
+    <section class="tool" id="toggleDoorSection">
+      <h2>Toggle Door Generator</h2>
+      <label for="doorXInput">Open Position X:</label>
+      <input type="number" id="doorXInput" placeholder="0" />
+      <label for="doorYInput">Open Position Y:</label>
+      <input type="number" id="doorYInput" placeholder="10" />
+      <label for="doorZInput">Open Position Z:</label>
+      <input type="number" id="doorZInput" placeholder="0" />
+      <div class="button-row">
+        <button id="generateDoor">Generate Script</button>
+        <button id="copyDoorScript">Copy Script</button>
+        <button id="downloadDoorScript">Download .lua 📥</button>
+      </div>
+      <pre id="doorOutput" class="code-box"></pre>
+    </section>
+
+    <!-- Power-Up Pickup Generator -->
+    <section class="tool" id="powerUpSection">
+      <h2>Power-Up Pickup Generator</h2>
+      <label for="powerUpNameInput">Power-Up Name:</label>
+      <input type="text" id="powerUpNameInput" placeholder="SpeedBoost" />
+      <label for="powerUpDurationInput">Duration (seconds):</label>
+      <input type="number" id="powerUpDurationInput" placeholder="10" />
+      <div class="button-row">
+        <button id="generatePowerUp">Generate Script</button>
+        <button id="copyPowerUpScript">Copy Script</button>
+        <button id="downloadPowerUpScript">Download .lua 📥</button>
+      </div>
+      <pre id="powerUpOutput" class="code-box"></pre>
+    </section>
+  </main>
+
+  <footer>
+    <p>Made with ❤️ by CedricGalala</p>
+  </footer>
+
+  <script src="script.js"></script>
 </body>
 </html>

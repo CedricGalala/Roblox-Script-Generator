@@ -1,20 +1,10 @@
-@@ -1,143 +1,185 @@
-// --- Configuration ---
 const generators = [
-  // Effects
   {
     name: "Kill Brick",
     category: "Effects",
-    name: "Explosion Trigger",
-    inputs: ["Explosion Power"],
-    generate: ({"Explosion Power": power}) => `
     fields: [{ name: "damage", label: "Damage Amount" }],
     generate: ({ damage }) => `
 script.Parent.Touched:Connect(function(hit)
-  local explosion = Instance.new("Explosion")
-  explosion.Position = script.Parent.Position
-  explosion.BlastRadius = ${power}
-  explosion.Parent = workspace
   local humanoid = hit.Parent:FindFirstChild("Humanoid")
   if humanoid then
     humanoid:TakeDamage(${damage})
@@ -23,10 +13,6 @@ end)
     `.trim()
   },
   {
-    category: "Effects",
-    name: "Speed Boost Pad",
-    inputs: ["Boost Speed", "Boost Duration (seconds)", "Original Speed"],
-    generate: ({"Boost Speed": b, "Boost Duration (seconds)": d, "Original Speed": o}) => `
     name: "Teleport Pad",
     category: "Teleportation",
     fields: [
@@ -36,13 +22,6 @@ end)
     ],
     generate: ({ x, y, z }) => `
 script.Parent.Touched:Connect(function(hit)
-  local human = hit.Parent:FindFirstChild("Humanoid")
-  if human then
-    local originalSpeed = ${o}
-    human.WalkSpeed = ${b}
-    task.delay(${d}, function()
-      human.WalkSpeed = originalSpeed
-    end)
   local character = hit.Parent
   if character:FindFirstChild("Humanoid") then
     character:SetPrimaryPartCFrame(CFrame.new(${x}, ${y}, ${z}))
@@ -51,22 +30,6 @@ end)
     `.trim()
   },
   {
-    category: "UI",
-    name: "Message Popup (BillboardGui)",
-    inputs: ["Message Text"],
-    generate: ({"Message Text": text}) => `
-local gui = Instance.new("BillboardGui")
-local label = Instance.new("TextLabel")
-label.Text = "${text}"
-label.Size = UDim2.new(1, 0, 1, 0)
-label.BackgroundTransparency = 1
-label.TextColor3 = Color3.new(1, 1, 1)
-label.TextScaled = true
-gui.Size = UDim2.new(0, 200, 0, 50)
-gui.AlwaysOnTop = true
-gui.Adornee = script.Parent
-gui.Parent = script.Parent
-label.Parent = gui
     name: "Jump Pad",
     category: "Movement",
     fields: [{ name: "force", label: "Jump Force" }],
@@ -79,19 +42,12 @@ script.Parent.Touched:Connect(function(hit)
 end)
     `.trim()
   },
-  // Movement
   {
     name: "Speed Boost Pad",
     category: "Movement",
-    name: "Jump Pad",
-    inputs: ["Jump Power"],
-    generate: ({"Jump Power": jp}) => `
     fields: [{ name: "speed", label: "Speed Amount" }],
     generate: ({ speed }) => `
 script.Parent.Touched:Connect(function(hit)
-  local hrp = hit.Parent:FindFirstChild("HumanoidRootPart")
-  if hrp then
-    hrp.Velocity = Vector3.new(0, ${jp}, 0)
   local humanoid = hit.Parent:FindFirstChild("Humanoid")
   if humanoid then
     humanoid.WalkSpeed = ${speed}
@@ -99,9 +55,7 @@ script.Parent.Touched:Connect(function(hit)
 end)
     `.trim()
   },
-  // Interaction
   {
-    category: "Interaction",
     name: "Message Popup (BillboardGui)",
     category: "UI",
     fields: [{ name: "message", label: "Message Text" }],
@@ -136,8 +90,6 @@ end)
   },
   {
     name: "Proximity Prompt Action",
-    inputs: ["Prompt Text", "Action Script"],
-    generate: ({"Prompt Text": t, "Action Script": s}) => `
     category: "Interaction",
     fields: [
       { name: "actionText", label: "Action Text" },
@@ -145,14 +97,10 @@ end)
     ],
     generate: ({ actionText, objectName }) => `
 local prompt = Instance.new("ProximityPrompt")
-prompt.ActionText = "${t}"
-prompt.ObjectText = "Interact"
 prompt.ActionText = "${actionText}"
 prompt.ObjectText = script.Parent.Name
 prompt.RequiresLineOfSight = false
 prompt.Parent = script.Parent
-prompt.Triggered:Connect(function(player)
-  ${s}
 
 prompt.Triggered:Connect(function()
   local part = Instance.new("Part")
@@ -166,36 +114,20 @@ end)
   }
 ];
 
-// --- Page Setup ---
-const container = document.getElementById("generatorsContainer");
 const categories = [...new Set(generators.map(g => g.category))];
 
-categories.forEach(cat => {
 const container = document.getElementById("generatorsContainer");
 categories.forEach(category => {
   const section = document.createElement("div");
   section.className = "category";
-  section.innerHTML = `<h2>${cat}</h2>`;
   const heading = document.createElement("h2");
   heading.textContent = category;
   section.appendChild(heading);
 
-  generators.filter(g => g.category === cat).forEach(gen => {
   generators.filter(g => g.category === category).forEach(generator => {
     const div = document.createElement("div");
     div.className = "generator";
 
-    div.innerHTML = `
-      <h3>${gen.name}</h3>
-      <div class="form-group">
-        ${gen.inputs.map(input => `
-          <label>${input}: <input type="text" data-input="${input}"/></label><br>
-        `).join('')}
-      </div>
-      <button class="generate">Generate</button>
-      <button class="download">Download .lua</button>
-      <pre><code class="output"></code></pre>
-    `;
     const title = document.createElement("h3");
     title.textContent = generator.name;
     div.appendChild(title);
@@ -216,17 +148,6 @@ categories.forEach(category => {
     });
     div.appendChild(form);
 
-    div.querySelector(".generate").onclick = () => {
-      const inputs = {};
-      div.querySelectorAll("[data-input]").forEach(inp => {
-        inputs[inp.dataset.input] = inp.value;
-      });
-      try {
-        const code = gen.generate(inputs);
-        div.querySelector(".output").textContent = code;
-      } catch (e) {
-        div.querySelector(".output").textContent = "Error: Invalid input.";
-      }
     const pre = document.createElement("pre");
     div.appendChild(pre);
 
@@ -237,9 +158,6 @@ categories.forEach(category => {
     };
     div.appendChild(generateBtn);
 
-    div.querySelector(".download").onclick = () => {
-      const code = div.querySelector(".output").textContent;
-      const blob = new Blob([code], {type: 'text/plain'});
     const downloadBtn = document.createElement("button");
     downloadBtn.textContent = "💾 Download";
     downloadBtn.className = "download";
@@ -249,11 +167,9 @@ categories.forEach(category => {
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = gen.name.replace(/\s+/g, '_') + ".lua";
       a.download = generator.name.replace(/\s+/g, "_") + ".lua";
       document.body.appendChild(a);
       a.click();
-      URL.revokeObjectURL(url);
       document.body.removeChild(a);
     };
     div.appendChild(downloadBtn);
@@ -264,9 +180,6 @@ categories.forEach(category => {
   container.appendChild(section);
 });
 
-// --- Dark Mode Toggle ---
 document.getElementById("darkModeToggle").onclick = () => {
   document.body.classList.toggle("dark-mode");
-  const toggle = document.getElementById("darkModeToggle");
-  toggle.textContent = document.body.classList.contains("dark-mode") ? "☀️ Light Mode" : "🌙 Dark Mode";
 };

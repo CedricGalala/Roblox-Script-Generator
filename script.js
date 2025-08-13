@@ -115,15 +115,9 @@ end)
     }
   ];
 
-  const categories = [...new Set(generators.map(g => g.category))];
   const container = document.getElementById("generatorsContainer");
-
-  if (!container) {
-    console.error("Cannot find container with id 'generatorsContainer'.");
-    return;
-  }
-
-  let openCategory = null;
+  const categories = [...new Set(generators.map(g => g.category))];
+  let openCategorySection = null;
 
   categories.forEach(category => {
     const section = document.createElement("div");
@@ -133,17 +127,19 @@ end)
     heading.textContent = category;
     section.appendChild(heading);
 
+    // Wrapper for all generators of this category
     const scriptsWrapper = document.createElement("div");
     scriptsWrapper.className = "generators-wrapper";
-    scriptsWrapper.style.display = "none";
+    scriptsWrapper.style.display = "none"; // Hide by default
 
+    // Create each generator UI block
     generators.filter(g => g.category === category).forEach(generator => {
-      const div = document.createElement("div");
-      div.className = "generator";
+      const genDiv = document.createElement("div");
+      genDiv.className = "generator";
 
       const title = document.createElement("h3");
       title.textContent = generator.name;
-      div.appendChild(title);
+      genDiv.appendChild(title);
 
       const form = document.createElement("div");
       form.className = "form-group";
@@ -161,17 +157,17 @@ end)
         label.appendChild(input);
         form.appendChild(label);
       });
-      div.appendChild(form);
+      genDiv.appendChild(form);
 
       const pre = document.createElement("pre");
-      div.appendChild(pre);
+      genDiv.appendChild(pre);
 
       const generateBtn = document.createElement("button");
       generateBtn.textContent = "Generate";
       generateBtn.onclick = () => {
         pre.textContent = generator.generate(state);
       };
-      div.appendChild(generateBtn);
+      genDiv.appendChild(generateBtn);
 
       const downloadBtn = document.createElement("button");
       downloadBtn.textContent = "💾 Download";
@@ -187,32 +183,35 @@ end)
         a.click();
         document.body.removeChild(a);
       };
-      div.appendChild(downloadBtn);
+      genDiv.appendChild(downloadBtn);
 
-      scriptsWrapper.appendChild(div);
+      scriptsWrapper.appendChild(genDiv);
     });
 
     section.appendChild(scriptsWrapper);
     container.appendChild(section);
 
+    // Accordion toggle logic:
     heading.style.cursor = "pointer";
     heading.addEventListener("click", () => {
-      if (openCategory && openCategory !== scriptsWrapper) {
-        openCategory.style.display = "none";
-        openCategory.parentElement.classList.remove("expanded");
+      if (openCategorySection && openCategorySection !== scriptsWrapper) {
+        openCategorySection.style.display = "none";
+        openCategorySection.parentElement.classList.remove("expanded");
       }
+
       if (scriptsWrapper.style.display === "block") {
         scriptsWrapper.style.display = "none";
         section.classList.remove("expanded");
-        openCategory = null;
+        openCategorySection = null;
       } else {
         scriptsWrapper.style.display = "block";
         section.classList.add("expanded");
-        openCategory = scriptsWrapper;
+        openCategorySection = scriptsWrapper;
       }
     });
   });
 
+  // Dark mode toggle
   document.getElementById("darkModeToggle").onclick = () => {
     document.body.classList.toggle("dark-mode");
   };

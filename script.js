@@ -1,4 +1,4 @@
-// All generators (original + new), grouped by category:
+// All generators (fixed and improved), grouped by category:
 const generators = [
   {
     category: "Effects",
@@ -10,7 +10,7 @@ const generators = [
 script.Parent.Touched:Connect(function(hit)
   local humanoid = hit.Parent:FindFirstChild("Humanoid")
   if humanoid then
-    humanoid:TakeDamage(${damage})
+    humanoid:TakeDamage(tonumber(${damage}))
   end
 end)
 `.trim()
@@ -22,7 +22,7 @@ end)
 script.Parent.Touched:Connect(function(hit)
   local explosion = Instance.new("Explosion")
   explosion.Position = script.Parent.Position
-  explosion.BlastRadius = ${power}
+  explosion.BlastRadius = tonumber(${power})
   explosion.Parent = workspace
 end)
 `.trim()
@@ -37,10 +37,10 @@ end)
         fields: [{ name: "force", label: "Jump Force" }],
         generate: ({ force }) => `
 script.Parent.Touched:Connect(function(hit)
-  local human = hit.Parent:FindFirstChild("Humanoid")
-  if human then
-    human:ChangeState(Enum.HumanoidStateType.Jumping)
-    human.JumpPower = ${force}
+  local humanoid = hit.Parent:FindFirstChild("Humanoid")
+  if humanoid then
+    humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+    humanoid.JumpPower = tonumber(${force})
   end
 end)
 `.trim()
@@ -49,17 +49,18 @@ end)
         name: "Speed Boost Pad",
         fields: [
           { name: "boostSpeed", label: "Boost Speed" },
-          { name: "boostDuration", label: "Boost Duration (seconds)" },
-          { name: "originalSpeed", label: "Original Speed" }
+          { name: "boostDuration", label: "Boost Duration (seconds)" }
         ],
-        generate: ({ boostSpeed, boostDuration, originalSpeed }) => `
+        generate: ({ boostSpeed, boostDuration }) => `
 script.Parent.Touched:Connect(function(hit)
-  local human = hit.Parent:FindFirstChild("Humanoid")
-  if human then
-    local originalSpeed = ${originalSpeed}
-    human.WalkSpeed = ${boostSpeed}
-    task.delay(${boostDuration}, function()
-      human.WalkSpeed = originalSpeed
+  local humanoid = hit.Parent:FindFirstChild("Humanoid")
+  if humanoid then
+    local originalSpeed = humanoid.WalkSpeed
+    humanoid.WalkSpeed = tonumber(${boostSpeed})
+    task.delay(tonumber(${boostDuration}), function()
+      if humanoid and humanoid.Parent then
+        humanoid.WalkSpeed = originalSpeed
+      end
     end)
   end
 end)
@@ -124,7 +125,7 @@ end)
 script.Parent.Touched:Connect(function(hit)
   local character = hit.Parent
   if character:FindFirstChild("Humanoid") then
-    character:SetPrimaryPartCFrame(CFrame.new(${x}, ${y}, ${z}))
+    character:SetPrimaryPartCFrame(CFrame.new(tonumber(${x}), tonumber(${y}), tonumber(${z})))
   end
 end)
 `.trim()

@@ -1,4 +1,3 @@
-// All generators (original + new), grouped by category:
 const generators = [
   {
     category: "Effects",
@@ -44,305 +43,140 @@ script.Parent.Touched:Connect(function(hit)
   end
 end)
 `.trim()
-      },
-      {
-        name: "Speed Boost Pad",
-        fields: [
-          { name: "boostSpeed", label: "Boost Speed" },
-          { name: "boostDuration", label: "Boost Duration (seconds)" },
-          { name: "originalSpeed", label: "Original Speed" }
-        ],
-        generate: ({ boostSpeed, boostDuration, originalSpeed }) => `
-script.Parent.Touched:Connect(function(hit)
-  local human = hit.Parent:FindFirstChild("Humanoid")
-  if human then
-    local originalSpeed = ${originalSpeed}
-    human.WalkSpeed = ${boostSpeed}
-    task.delay(${boostDuration}, function()
-      human.WalkSpeed = originalSpeed
-    end)
-  end
-end)
-`.trim()
-      }
-    ]
-  },
-  {
-    category: "UI",
-    scripts: [
-      {
-        name: "Message Popup (BillboardGui)",
-        fields: [{ name: "message", label: "Message Text" }],
-        generate: ({ message }) => `
-local billboard = Instance.new("BillboardGui", script.Parent)
-billboard.Size = UDim2.new(0, 200, 0, 50)
-billboard.Adornee = script.Parent
-billboard.AlwaysOnTop = true
-
-local label = Instance.new("TextLabel", billboard)
-label.Size = UDim2.new(1,0,1,0)
-label.BackgroundTransparency = 1
-label.TextColor3 = Color3.new(1,1,1)
-label.TextStrokeTransparency = 0
-label.Text = "${message}"
-label.TextScaled = true
-`.trim()
-      }
-    ]
-  },
-  {
-    category: "Interaction",
-    scripts: [
-      {
-        name: "Proximity Prompt Action",
-        fields: [{ name: "actionText", label: "Action Text" }],
-        generate: ({ actionText }) => `
-local prompt = Instance.new("ProximityPrompt", script.Parent)
-prompt.ActionText = "${actionText}"
-prompt.ObjectText = script.Parent.Name
-prompt.MaxActivationDistance = 10
-prompt.RequiresLineOfSight = false
-
-prompt.Triggered:Connect(function(player)
-  print(player.Name .. " triggered the prompt!")
-end)
-`.trim()
-      }
-    ]
-  },
-  {
-    category: "Teleportation",
-    scripts: [
-      {
-        name: "Teleport Pad",
-        fields: [
-          { name: "x", label: "X Coordinate" },
-          { name: "y", label: "Y Coordinate" },
-          { name: "z", label: "Z Coordinate" }
-        ],
-        generate: ({ x, y, z }) => `
-script.Parent.Touched:Connect(function(hit)
-  local character = hit.Parent
-  if character:FindFirstChild("Humanoid") then
-    character:SetPrimaryPartCFrame(CFrame.new(${x}, ${y}, ${z}))
-  end
-end)
-`.trim()
       }
     ]
   }
 ];
 
-const categoriesContainer = document.getElementById("categoriesContainer");
-
-// Helper: create input element for a field
+// Helper to create input
 function createInput(field) {
-  const wrapper = document.createElement("div");
-  wrapper.style.marginBottom = "8px";
-
   const label = document.createElement("label");
-  label.textContent = field.label + ": ";
-  label.htmlFor = "input_" + field.name;
-  wrapper.appendChild(label);
+  label.textContent = field.label;
 
   const input = document.createElement("input");
   input.type = "text";
-  input.id = "input_" + field.name + Math.random().toString(36).substr(2, 5); // unique id to prevent duplicates
   input.name = field.name;
-  input.required = true;
-  input.style.width = "100%";
-  wrapper.appendChild(input);
+  label.appendChild(input);
 
-  return wrapper;
+  return label;
 }
 
+// Create generator UI
 function createGeneratorElement(gen) {
-  const genDiv = document.createElement("div");
-  genDiv.classList.add("generator");
+  const container = document.createElement("div");
+  container.className = "generator";
 
   const title = document.createElement("h3");
   title.textContent = gen.name;
-  genDiv.appendChild(title);
+  container.appendChild(title);
 
-  // Form for inputs
   const form = document.createElement("form");
-  form.style.marginBottom = "10px";
-
-  // Inputs
-  const inputs = {};
-  gen.fields.forEach(field => {
-    const inputElem = createInput(field);
-    form.appendChild(inputElem);
-    inputs[field.name] = inputElem.querySelector("input");
+  gen.fields.forEach(f => {
+    form.appendChild(createInput(f));
   });
+  container.appendChild(form);
 
-  genDiv.appendChild(form);
-
-  // Code output block
   const codeBlock = document.createElement("pre");
   codeBlock.textContent = "-- Fill inputs and click Generate --";
-  genDiv.appendChild(codeBlock);
+  container.appendChild(codeBlock);
 
-  // Buttons container
-  const buttonsDiv = document.createElement("div");
-  buttonsDiv.classList.add("buttons");
-
-  // Generate button
-  const generateBtn = document.createElement("button");
-  generateBtn.type = "button";
-  generateBtn.textContent = "Generate Script";
-  generateBtn.classList.add("copy-btn");
-  generateBtn.style.marginRight = "10px";
-  generateBtn.addEventListener("click", () => {
-    // Gather input values
+  const btnGenerate = document.createElement("button");
+  btnGenerate.type = "button";
+  btnGenerate.textContent = "Generate Script";
+  btnGenerate.addEventListener("click", () => {
     const values = {};
-    let valid = true;
-    for (const key in inputs) {
-      const val = inputs[key].value.trim();
+    for (const f of gen.fields) {
+      const val = form.elements[f.name].value.trim();
       if (!val) {
-        alert("Please fill in all inputs!");
-        valid = false;
-        break;
+        alert("Please fill all fields.");
+        return;
       }
-      values[key] = val;
+      values[f.name] = val;
     }
-    if (!valid) return;
-
-    // Generate code and show
     const code = gen.generate(values);
     codeBlock.textContent = code;
   });
-  buttonsDiv.appendChild(generateBtn);
+  container.appendChild(btnGenerate);
 
-  // Copy button
-  const copyBtn = document.createElement("button");
-  copyBtn.type = "button";
-  copyBtn.textContent = "📋 Copy";
-  copyBtn.classList.add("copy-btn");
-  copyBtn.addEventListener("click", () => {
-    if (codeBlock.textContent && !codeBlock.textContent.includes("Fill inputs")) {
-      navigator.clipboard.writeText(codeBlock.textContent).then(() => {
-        alert("Script copied to clipboard!");
-      });
-    } else {
-      alert("Generate the script first!");
+  const btnCopy = document.createElement("button");
+  btnCopy.type = "button";
+  btnCopy.textContent = "📋 Copy";
+  btnCopy.style.marginLeft = "10px";
+  btnCopy.addEventListener("click", () => {
+    if (codeBlock.textContent.includes("-- Fill")) {
+      alert("Generate the script first.");
+      return;
     }
+    navigator.clipboard.writeText(codeBlock.textContent);
+    alert("Copied to clipboard!");
   });
-  buttonsDiv.appendChild(copyBtn);
+  container.appendChild(btnCopy);
 
-  // Download button
-  const downloadBtn = document.createElement("button");
-  downloadBtn.type = "button";
-  downloadBtn.textContent = "💾 Download .lua";
-  downloadBtn.classList.add("download-btn");
-  downloadBtn.addEventListener("click", () => {
-    if (codeBlock.textContent && !codeBlock.textContent.includes("Fill inputs")) {
-      const blob = new Blob([codeBlock.textContent], { type: "text/plain" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `${gen.name.replace(/\s+/g, "_")}.lua`;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
-    } else {
-      alert("Generate the script first!");
-    }
-  });
-  buttonsDiv.appendChild(downloadBtn);
-
-  genDiv.appendChild(buttonsDiv);
-
-  return genDiv;
+  return container;
 }
 
-let currentlyOpenGeneratorsDiv = null;
-let currentlyOpenArrow = null;
+// Accordion logic:
+const categoriesContainer = document.getElementById("categoriesContainer");
+let openedGeneratorsDiv = null;
+let openedArrow = null;
 
-function createCategoryElement(category) {
-  const categoryDiv = document.createElement("div");
-  categoryDiv.classList.add("category");
+generators.forEach(category => {
+  const catDiv = document.createElement("div");
+  catDiv.className = "category";
 
-  // Arrow icon
   const arrow = document.createElement("span");
-  arrow.classList.add("category-arrow");
+  arrow.className = "category-arrow";
   arrow.textContent = "▶";
-  categoryDiv.appendChild(arrow);
+  catDiv.appendChild(arrow);
 
-  // Title
   const title = document.createElement("div");
-  title.classList.add("category-title");
   title.textContent = category.category;
-  categoryDiv.appendChild(title);
+  title.style.flexGrow = "1";
+  catDiv.appendChild(title);
 
-  // Generators container (hidden initially)
-  const generatorsDiv = document.createElement("div");
-  generatorsDiv.classList.add("generators");
-  generatorsDiv.style.display = "none";
+  categoriesContainer.appendChild(catDiv);
 
-  // Create each generator element
+  // Generators container
+  const genContainer = document.createElement("div");
+  genContainer.className = "generators";
+  genContainer.style.display = "none";
+  categoriesContainer.appendChild(genContainer);
+
+  // Add all generators inside this container
   category.scripts.forEach(gen => {
-    generatorsDiv.appendChild(createGeneratorElement(gen));
+    genContainer.appendChild(createGeneratorElement(gen));
   });
 
-  // Add generators container after category div
-  categoryDiv.insertAdjacentElement("afterend", generatorsDiv);
-
-  // Accordion toggle behavior:
-  categoryDiv.addEventListener("click", () => {
-    if (generatorsDiv.style.display === "none") {
-      // Close previously opened category
-      if (currentlyOpenGeneratorsDiv && currentlyOpenGeneratorsDiv !== generatorsDiv) {
-        currentlyOpenGeneratorsDiv.style.display = "none";
+  // Click event - accordion behavior
+  catDiv.addEventListener("click", () => {
+    if (genContainer.style.display === "none") {
+      // Close previously opened
+      if (openedGeneratorsDiv && openedGeneratorsDiv !== genContainer) {
+        openedGeneratorsDiv.style.display = "none";
+        openedArrow.textContent = "▶";
       }
-      if (currentlyOpenArrow && currentlyOpenArrow !== arrow) {
-        currentlyOpenArrow.classList.remove("open");
-      }
-      // Open clicked category
-      generatorsDiv.style.display = "block";
-      arrow.classList.add("open");
-      currentlyOpenGeneratorsDiv = generatorsDiv;
-      currentlyOpenArrow = arrow;
+      // Open this
+      genContainer.style.display = "block";
+      arrow.textContent = "▼";
+      openedGeneratorsDiv = genContainer;
+      openedArrow = arrow;
     } else {
-      // Close clicked category if already open
-      generatorsDiv.style.display = "none";
-      arrow.classList.remove("open");
-      currentlyOpenGeneratorsDiv = null;
-      currentlyOpenArrow = null;
+      // Close if clicking open category
+      genContainer.style.display = "none";
+      arrow.textContent = "▶";
+      openedGeneratorsDiv = null;
+      openedArrow = null;
     }
   });
-
-  return categoryDiv;
-}
-
-// Render all categories
-generators.forEach(cat => {
-  const catElem = createCategoryElement(cat);
-  categoriesContainer.appendChild(catElem);
 });
 
 // Dark mode toggle
 const darkModeToggle = document.getElementById("darkModeToggle");
 darkModeToggle.addEventListener("click", () => {
   document.body.classList.toggle("dark-mode");
-  // Change button emoji
   if (document.body.classList.contains("dark-mode")) {
     darkModeToggle.textContent = "☀️";
   } else {
     darkModeToggle.textContent = "🌙";
-  }
-});
-
-// Remember dark mode preference
-if (localStorage.getItem("darkMode") === "enabled") {
-  document.body.classList.add("dark-mode");
-  darkModeToggle.textContent = "☀️";
-}
-darkModeToggle.addEventListener("click", () => {
-  if (document.body.classList.contains("dark-mode")) {
-    localStorage.setItem("darkMode", "enabled");
-  } else {
-    localStorage.setItem("darkMode", "disabled");
   }
 });

@@ -5,15 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Roblox Script Generator</title>
   <link rel="stylesheet" href="style.css" />
-  <style>
-    /* Collapsible sections */
-    .content.collapsed { display: none; }
-    .tool { margin-bottom: 20px; border: 1px solid #ccc; padding: 10px; border-radius: 8px; }
-    .button-row button { margin-right: 5px; }
-    .code-box { background:#f5f5f5; padding:10px; border-radius:5px; white-space: pre-wrap; }
-    body.dark-mode { background: #111; color: #eee; }
-    body.dark-mode .code-box { background: #222; color: #eee; }
-  </style>
 </head>
 <body>
   <header>
@@ -23,16 +14,16 @@
   </header>
 
   <main>
-    <!-- Example: Kill Brick Generator -->
+    <!-- Kill Brick Generator -->
     <section class="tool" id="killBrickSection">
       <h2>Kill Brick Generator</h2>
-      <div class="content collapsed">
+      <div class="content">
         <label for="damageInput">Damage:</label>
         <input type="number" id="damageInput" placeholder="10" />
         <div class="button-row">
           <button id="generateKillBrick">Generate Script</button>
-          <button id="copyKillScript">📋 Copy Script</button>
-          <button id="downloadKillScript">📥 Download Script</button>
+          <button id="copyKillScript">Copy 📋</button>
+          <button id="downloadKillScript">Download ⬇️</button>
         </div>
         <pre id="killOutput" class="code-box"></pre>
       </div>
@@ -41,14 +32,17 @@
     <!-- Teleport Pad Generator -->
     <section class="tool" id="teleportPadSection">
       <h2>Teleport Pad Generator</h2>
-      <div class="content collapsed">
-        <label for="xInput">X:</label><input type="number" id="xInput" placeholder="0" />
-        <label for="yInput">Y:</label><input type="number" id="yInput" placeholder="10" />
-        <label for="zInput">Z:</label><input type="number" id="zInput" placeholder="0" />
+      <div class="content">
+        <label for="xInput">X:</label>
+        <input type="number" id="xInput" placeholder="0" />
+        <label for="yInput">Y:</label>
+        <input type="number" id="yInput" placeholder="10" />
+        <label for="zInput">Z:</label>
+        <input type="number" id="zInput" placeholder="0" />
         <div class="button-row">
           <button id="generateTeleport">Generate Script</button>
-          <button id="copyTeleportScript">📋 Copy Script</button>
-          <button id="downloadTeleportScript">📥 Download Script</button>
+          <button id="copyTeleportScript">Copy 📋</button>
+          <button id="downloadTeleportScript">Download ⬇️</button>
         </div>
         <pre id="teleportOutput" class="code-box"></pre>
       </div>
@@ -57,13 +51,13 @@
     <!-- Spinner Part Generator -->
     <section class="tool" id="spinnerSection">
       <h2>Spinner Part Generator</h2>
-      <div class="content collapsed">
-        <label for="spinSpeedInput">Rotation Speed (degrees/sec):</label>
+      <div class="content">
+        <label for="spinSpeedInput">Rotation Speed (degrees/second):</label>
         <input type="number" id="spinSpeedInput" placeholder="60" />
         <div class="button-row">
           <button id="generateSpinner">Generate Script</button>
-          <button id="copySpinnerScript">📋 Copy Script</button>
-          <button id="downloadSpinnerScript">📥 Download Script</button>
+          <button id="copySpinnerScript">Copy 📋</button>
+          <button id="downloadSpinnerScript">Download ⬇️</button>
         </div>
         <pre id="spinnerOutput" class="code-box"></pre>
       </div>
@@ -72,14 +66,17 @@
     <!-- Toggle Door Generator -->
     <section class="tool" id="toggleDoorSection">
       <h2>Toggle Door Generator</h2>
-      <div class="content collapsed">
-        <label for="doorXInput">Open X:</label><input type="number" id="doorXInput" placeholder="0" />
-        <label for="doorYInput">Open Y:</label><input type="number" id="doorYInput" placeholder="10" />
-        <label for="doorZInput">Open Z:</label><input type="number" id="doorZInput" placeholder="0" />
+      <div class="content">
+        <label for="doorXInput">Open Position X:</label>
+        <input type="number" id="doorXInput" placeholder="0" />
+        <label for="doorYInput">Open Position Y:</label>
+        <input type="number" id="doorYInput" placeholder="10" />
+        <label for="doorZInput">Open Position Z:</label>
+        <input type="number" id="doorZInput" placeholder="0" />
         <div class="button-row">
           <button id="generateDoor">Generate Script</button>
-          <button id="copyDoorScript">📋 Copy Script</button>
-          <button id="downloadDoorScript">📥 Download Script</button>
+          <button id="copyDoorScript">Copy 📋</button>
+          <button id="downloadDoorScript">Download ⬇️</button>
         </div>
         <pre id="doorOutput" class="code-box"></pre>
       </div>
@@ -88,13 +85,15 @@
     <!-- Power-Up Pickup Generator -->
     <section class="tool" id="powerUpSection">
       <h2>Power-Up Pickup Generator</h2>
-      <div class="content collapsed">
-        <label for="powerUpNameInput">Name:</label><input type="text" id="powerUpNameInput" placeholder="SpeedBoost" />
-        <label for="powerUpDurationInput">Duration (sec):</label><input type="number" id="powerUpDurationInput" placeholder="10" />
+      <div class="content">
+        <label for="powerUpNameInput">Power-Up Name:</label>
+        <input type="text" id="powerUpNameInput" placeholder="SpeedBoost" />
+        <label for="powerUpDurationInput">Duration (seconds):</label>
+        <input type="number" id="powerUpDurationInput" placeholder="10" />
         <div class="button-row">
           <button id="generatePowerUp">Generate Script</button>
-          <button id="copyPowerUpScript">📋 Copy Script</button>
-          <button id="downloadPowerUpScript">📥 Download Script</button>
+          <button id="copyPowerUpScript">Copy 📋</button>
+          <button id="downloadPowerUpScript">Download ⬇️</button>
         </div>
         <pre id="powerUpOutput" class="code-box"></pre>
       </div>
@@ -103,12 +102,13 @@
     <!-- Jump Pad Generator -->
     <section class="tool" id="jumpPadSection">
       <h2>Jump Pad Generator</h2>
-      <div class="content collapsed">
-        <label for="jumpForceInput">Jump Power:</label><input type="number" id="jumpForceInput" placeholder="100" />
+      <div class="content">
+        <label for="jumpForceInput">Jump Force:</label>
+        <input type="number" id="jumpForceInput" placeholder="100" />
         <div class="button-row">
           <button id="generateJumpPad">Generate Script</button>
-          <button id="copyJumpPadScript">📋 Copy Script</button>
-          <button id="downloadJumpPadScript">📥 Download Script</button>
+          <button id="copyJumpPadScript">Copy 📋</button>
+          <button id="downloadJumpPadScript">Download ⬇️</button>
         </div>
         <pre id="jumpPadOutput" class="code-box"></pre>
       </div>
@@ -117,12 +117,13 @@
     <!-- Speed Boost Pad Generator -->
     <section class="tool" id="speedBoostSection">
       <h2>Speed Boost Pad Generator</h2>
-      <div class="content collapsed">
-        <label for="speedBoostInput">Speed Multiplier:</label><input type="number" id="speedBoostInput" placeholder="2" />
+      <div class="content">
+        <label for="speedBoostInput">WalkSpeed:</label>
+        <input type="number" id="speedBoostInput" placeholder="2" />
         <div class="button-row">
           <button id="generateSpeedBoost">Generate Script</button>
-          <button id="copySpeedBoostScript">📋 Copy Script</button>
-          <button id="downloadSpeedBoostScript">📥 Download Script</button>
+          <button id="copySpeedBoostScript">Copy 📋</button>
+          <button id="downloadSpeedBoostScript">Download ⬇️</button>
         </div>
         <pre id="speedBoostOutput" class="code-box"></pre>
       </div>
@@ -131,12 +132,13 @@
     <!-- Message Popup Generator -->
     <section class="tool" id="messagePopupSection">
       <h2>Message Popup Generator</h2>
-      <div class="content collapsed">
-        <label for="popupMessageInput">Message:</label><input type="text" id="popupMessageInput" placeholder="Hello!" />
+      <div class="content">
+        <label for="popupMessageInput">Message:</label>
+        <input type="text" id="popupMessageInput" placeholder="Hello!" />
         <div class="button-row">
           <button id="generateMessagePopup">Generate Script</button>
-          <button id="copyMessagePopupScript">📋 Copy Script</button>
-          <button id="downloadMessagePopupScript">📥 Download Script</button>
+          <button id="copyMessagePopupScript">Copy 📋</button>
+          <button id="downloadMessagePopupScript">Download ⬇️</button>
         </div>
         <pre id="messagePopupOutput" class="code-box"></pre>
       </div>
@@ -145,12 +147,13 @@
     <!-- Explosion Trigger Generator -->
     <section class="tool" id="explosionTriggerSection">
       <h2>Explosion Trigger Generator</h2>
-      <div class="content collapsed">
-        <label for="explosionPowerInput">Blast Radius:</label><input type="number" id="explosionPowerInput" placeholder="50" />
+      <div class="content">
+        <label for="explosionPowerInput">Blast Radius:</label>
+        <input type="number" id="explosionPowerInput" placeholder="50" />
         <div class="button-row">
           <button id="generateExplosionTrigger">Generate Script</button>
-          <button id="copyExplosionTriggerScript">📋 Copy Script</button>
-          <button id="downloadExplosionTriggerScript">📥 Download Script</button>
+          <button id="copyExplosionTriggerScript">Copy 📋</button>
+          <button id="downloadExplosionTriggerScript">Download ⬇️</button>
         </div>
         <pre id="explosionTriggerOutput" class="code-box"></pre>
       </div>
@@ -159,12 +162,13 @@
     <!-- Proximity Prompt Generator -->
     <section class="tool" id="proximityPromptSection">
       <h2>Proximity Prompt Generator</h2>
-      <div class="content collapsed">
-        <label for="promptActionInput">Action:</label><input type="text" id="promptActionInput" placeholder="DoAction" />
+      <div class="content">
+        <label for="promptActionInput">Action Name:</label>
+        <input type="text" id="promptActionInput" placeholder="DoAction" />
         <div class="button-row">
           <button id="generateProximityPrompt">Generate Script</button>
-          <button id="copyProximityPromptScript">📋 Copy Script</button>
-          <button id="downloadProximityPromptScript">📥 Download Script</button>
+          <button id="copyProximityPromptScript">Copy 📋</button>
+          <button id="downloadProximityPromptScript">Download ⬇️</button>
         </div>
         <pre id="proximityPromptOutput" class="code-box"></pre>
       </div>

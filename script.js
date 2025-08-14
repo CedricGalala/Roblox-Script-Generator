@@ -138,11 +138,14 @@ end)`
     const downloadBtn=document.getElementById(gen.downloadBtn);
 
     genBtn.addEventListener("click", ()=>{
-      // Collapse all
+      // Collapse all sections first
       document.querySelectorAll("section.tool .content").forEach(c=>c.classList.add("collapsed"));
-      // Expand current
-      outputEl.parentElement.classList.remove("collapsed");
-      // Generate script
+
+      // Expand the section of the clicked button
+      const contentDiv = genBtn.closest("section.tool").querySelector(".content");
+      contentDiv.classList.remove("collapsed");
+
+      // Generate the script
       outputEl.textContent = fillTemplate(gen.template, gen.values()).trim();
     });
 

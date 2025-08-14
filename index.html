@@ -1,108 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Roblox Script Generator</title>
-  <style>
-    body { font-family: Arial, sans-serif; padding: 20px; background: #f0f0f0; }
-    .dark-mode { background: #121212; color: white; }
-    h2 { margin-top: 2em; }
-    .generator { background: white; padding: 1em; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-    .dark-mode .generator { background: #1e1e1e; }
-    label, input, textarea { display: block; margin-top: 10px; }
-    textarea { width: 100%; height: 120px; margin-top: 5px; }
-    button { margin-top: 10px; padding: 0.5em 1em; cursor: pointer; border: none; border-radius: 5px; background-color: #007bff; color: white; }
-    button:hover { background-color: #0056b3; }
-    .download-button::before { content: "\1F4E5 "; }
-    #darkModeToggle { float: right; margin-bottom: 10px; }
-  </style>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <button id="darkModeToggle">🌙 Dark Mode</button>
-  <h1>Roblox Script Generator</h1>
+  <header>
+    <h1>Roblox Script Generator</h1>
+    <p>Build scripts for Roblox Studio with a few clicks</p>
+    <button id="darkModeToggle" aria-label="Toggle Dark Mode">🌙 Dark Mode</button>
+  </header>
 
-  <div id="generators"></div>
+  <main>
+    <!-- Kill Brick Generator -->
+    <section class="tool" id="killBrickSection">
+      <h2>Kill Brick Generator</h2>
+      <label for="damageInput">Damage:</label>
+      <input type="number" id="damageInput" placeholder="10" />
+      <div class="button-row">
+        <button id="generateKillBrick">Generate Script</button>
+        <button id="copyKillScript">Copy Script</button>
+        <button id="downloadKillScript">Download .lua 📥</button>
+      </div>
+      <pre id="killOutput" class="code-box"></pre>
+    </section>
 
-  <script>
-    // Load and initialize the script generation system
-  </script>
+    <!-- Teleport Pad Generator -->
+    <section class="tool" id="teleportPadSection">
+      <h2>Teleport Pad Generator</h2>
+      <label for="xInput">X:</label>
+      <input type="number" id="xInput" placeholder="0" />
+      <label for="yInput">Y:</label>
+      <input type="number" id="yInput" placeholder="10" />
+      <label for="zInput">Z:</label>
+      <input type="number" id="zInput" placeholder="0" />
+      <div class="button-row">
+        <button id="generateTeleport">Generate Script</button>
+        <button id="copyTeleportScript">Copy Script</button>
+        <button id="downloadTeleportScript">Download .lua 📥</button>
+      </div>
+      <pre id="teleportOutput" class="code-box"></pre>
+    </section>
+
+    <!-- Spinner Part Generator -->
+    <section class="tool" id="spinnerSection">
+      <h2>Spinner Part Generator</h2>
+      <label for="spinSpeedInput">Rotation Speed (degrees/second):</label>
+      <input type="number" id="spinSpeedInput" placeholder="60" />
+      <div class="button-row">
+        <button id="generateSpinner">Generate Script</button>
+        <button id="copySpinnerScript">Copy Script</button>
+        <button id="downloadSpinnerScript">Download .lua 📥</button>
+      </div>
+      <pre id="spinnerOutput" class="code-box"></pre>
+    </section>
+
+    <!-- Toggle Door Generator -->
+    <section class="tool" id="toggleDoorSection">
+      <h2>Toggle Door Generator</h2>
+      <label for="doorXInput">Open Position X:</label>
+      <input type="number" id="doorXInput" placeholder="0" />
+      <label for="doorYInput">Open Position Y:</label>
+      <input type="number" id="doorYInput" placeholder="10" />
+      <label for="doorZInput">Open Position Z:</label>
+      <input type="number" id="doorZInput" placeholder="0" />
+      <div class="button-row">
+        <button id="generateDoor">Generate Script</button>
+        <button id="copyDoorScript">Copy Script</button>
+        <button id="downloadDoorScript">Download .lua 📥</button>
+      </div>
+      <pre id="doorOutput" class="code-box"></pre>
+    </section>
+
+    <!-- Power-Up Pickup Generator -->
+    <section class="tool" id="powerUpSection">
+      <h2>Power-Up Pickup Generator</h2>
+      <label for="powerUpNameInput">Power-Up Name:</label>
+      <input type="text" id="powerUpNameInput" placeholder="SpeedBoost" />
+      <label for="powerUpDurationInput">Duration (seconds):</label>
+      <input type="number" id="powerUpDurationInput" placeholder="10" />
+      <div class="button-row">
+        <button id="generatePowerUp">Generate Script</button>
+        <button id="copyPowerUpScript">Copy Script</button>
+        <button id="downloadPowerUpScript">Download .lua 📥</button>
+      </div>
+      <pre id="powerUpOutput" class="code-box"></pre>
+    </section>
+  </main>
+
+  <footer>
+    <p>Made with ❤️ by CedricGalala</p>
+  </footer>
+
   <script src="script.js"></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const container = document.getElementById("generators");
-      const groups = {};
-
-      for (const [key, { category, template }] of Object.entries(templates)) {
-        if (!groups[category]) groups[category] = [];
-
-        const wrapper = document.createElement("div");
-        wrapper.className = "generator";
-
-        const title = document.createElement("h3");
-        title.textContent = key;
-
-        const form = document.createElement("form");
-        const matches = [...template.matchAll(/{{(.*?)}}/g)].map(m => m[1]);
-
-        for (const match of matches) {
-          const label = document.createElement("label");
-          label.textContent = match;
-
-          const input = document.createElement("input");
-          input.name = match;
-
-          form.appendChild(label);
-          form.appendChild(input);
-        }
-
-        const output = document.createElement("textarea");
-        output.readOnly = true;
-
-        const generateBtn = document.createElement("button");
-        generateBtn.type = "button";
-        generateBtn.textContent = "Generate";
-        generateBtn.addEventListener("click", () => {
-          const values = {};
-          matches.forEach(m => {
-            values[m] = form.elements[m].value;
-          });
-          output.value = fillTemplate(template, values);
-        });
-
-        const copyBtn = document.createElement("button");
-        copyBtn.type = "button";
-        copyBtn.textContent = "📋 Copy";
-        copyBtn.addEventListener("click", () => {
-          copyTextToClipboard(output.value);
-        });
-
-        const downloadBtn = document.createElement("button");
-        downloadBtn.type = "button";
-        downloadBtn.className = "download-button";
-        downloadBtn.textContent = "Download as .lua";
-        downloadBtn.addEventListener("click", () => {
-          const filename = key + ".lua";
-          downloadScript(output.value, filename);
-        });
-
-        wrapper.appendChild(title);
-        wrapper.appendChild(form);
-        wrapper.appendChild(output);
-        wrapper.appendChild(generateBtn);
-        wrapper.appendChild(copyBtn);
-        wrapper.appendChild(downloadBtn);
-
-        groups[category].push(wrapper);
-      }
-
-      for (const [category, blocks] of Object.entries(groups)) {
-        const heading = document.createElement("h2");
-        heading.textContent = category;
-        container.appendChild(heading);
-        blocks.forEach(b => container.appendChild(b));
-      }
-    });
-  </script>
 </body>
 </html>

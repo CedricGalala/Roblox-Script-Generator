@@ -1,108 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Roblox Script Generator</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 20px; background: #f0f0f0; }
-    .dark-mode { background: #121212; color: white; }
-    h2 { margin-top: 2em; }
-    .generator { background: white; padding: 1em; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-    .dark-mode .generator { background: #1e1e1e; }
-    label, input, textarea { display: block; margin-top: 10px; }
-    textarea { width: 100%; height: 120px; margin-top: 5px; }
-    button { margin-top: 10px; padding: 0.5em 1em; cursor: pointer; border: none; border-radius: 5px; background-color: #007bff; color: white; }
-    button:hover { background-color: #0056b3; }
-    .download-button::before { content: "\1F4E5 "; }
-    #darkModeToggle { float: right; margin-bottom: 10px; }
+    body {
+      font-family: sans-serif;
+      background: #f5f5f5;
+      color: #333;
+      padding: 1em;
+    }
+    body.dark-mode {
+      background: #121212;
+      color: #eee;
+    }
+    h1 {
+      text-align: center;
+    }
+    .category {
+      margin: 1em auto;
+      padding: 1em;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      cursor: pointer;
+    }
+    body.dark-mode .category {
+      background: #1e1e1e;
+    }
+    .category h2 {
+      margin: 0;
+    }
+    .generators {
+      display: none;
+      margin-top: 1em;
+    }
+    .generator {
+      padding: 1em;
+      background: #f9f9f9;
+      border-radius: 6px;
+      margin-bottom: 1em;
+    }
+    body.dark-mode .generator {
+      background: #2b2b2b;
+    }
+    pre {
+      background: #f0f0f0;
+      padding: 1em;
+      overflow-x: auto;
+      border-radius: 4px;
+    }
+    body.dark-mode pre {
+      background: #2b2b2b;
+    }
+    button {
+      margin-top: 0.5em;
+      margin-right: 0.5em;
+      padding: 0.4em 1em;
+      border: none;
+      border-radius: 4px;
+      background: #007bff;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    #darkModeToggle {
+      position: fixed;
+      top: 1em;
+      right: 1em;
+    }
   </style>
 </head>
 <body>
-  <button id="darkModeToggle">🌙 Dark Mode</button>
   <h1>Roblox Script Generator</h1>
+  <button id="darkModeToggle">🌙 Dark Mode</button>
+  <div id="categoriesContainer"></div>
 
-  <div id="generators"></div>
-
-  <script>
-    // Load and initialize the script generation system
-  </script>
   <script src="script.js"></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const container = document.getElementById("generators");
-      const groups = {};
-
-      for (const [key, { category, template }] of Object.entries(templates)) {
-        if (!groups[category]) groups[category] = [];
-
-        const wrapper = document.createElement("div");
-        wrapper.className = "generator";
-
-        const title = document.createElement("h3");
-        title.textContent = key;
-
-        const form = document.createElement("form");
-        const matches = [...template.matchAll(/{{(.*?)}}/g)].map(m => m[1]);
-
-        for (const match of matches) {
-          const label = document.createElement("label");
-          label.textContent = match;
-
-          const input = document.createElement("input");
-          input.name = match;
-
-          form.appendChild(label);
-          form.appendChild(input);
-        }
-
-        const output = document.createElement("textarea");
-        output.readOnly = true;
-
-        const generateBtn = document.createElement("button");
-        generateBtn.type = "button";
-        generateBtn.textContent = "Generate";
-        generateBtn.addEventListener("click", () => {
-          const values = {};
-          matches.forEach(m => {
-            values[m] = form.elements[m].value;
-          });
-          output.value = fillTemplate(template, values);
-        });
-
-        const copyBtn = document.createElement("button");
-        copyBtn.type = "button";
-        copyBtn.textContent = "📋 Copy";
-        copyBtn.addEventListener("click", () => {
-          copyTextToClipboard(output.value);
-        });
-
-        const downloadBtn = document.createElement("button");
-        downloadBtn.type = "button";
-        downloadBtn.className = "download-button";
-        downloadBtn.textContent = "Download as .lua";
-        downloadBtn.addEventListener("click", () => {
-          const filename = key + ".lua";
-          downloadScript(output.value, filename);
-        });
-
-        wrapper.appendChild(title);
-        wrapper.appendChild(form);
-        wrapper.appendChild(output);
-        wrapper.appendChild(generateBtn);
-        wrapper.appendChild(copyBtn);
-        wrapper.appendChild(downloadBtn);
-
-        groups[category].push(wrapper);
-      }
-
-      for (const [category, blocks] of Object.entries(groups)) {
-        const heading = document.createElement("h2");
-        heading.textContent = category;
-        container.appendChild(heading);
-        blocks.forEach(b => container.appendChild(b));
-      }
-    });
-  </script>
 </body>
 </html>

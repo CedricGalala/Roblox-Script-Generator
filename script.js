@@ -137,7 +137,7 @@ end)
   }
 
   function downloadScript(filename, content) {
-    if (!content) { alert("Generate a script first!"); return; }
+    if (!content) { alert("Please generate a script first!"); return; }
     const blob = new Blob([content], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -149,6 +149,7 @@ end)
 
   // ==== All Generators ====
   const generators = [
+    // Original 5
     { genBtn:"generateKillBrick", output:"killOutput", template:killBrickTemplate,
       values:()=>({damage:document.getElementById("damageInput").value||"10"}),
       copyBtn:"copyKillScript", downloadBtn:"downloadKillScript", filename:"KillBrick.lua" },
@@ -176,12 +177,12 @@ end)
       }),
       copyBtn:"copyPowerUpScript", downloadBtn:"downloadPowerUpScript", filename:"PowerUp.lua" },
 
-    // NEW 5 generators
+    // New 5
     { genBtn:"generateJumpPad", output:"jumpPadOutput", template:jumpPadTemplate,
       values:()=>({power:document.getElementById("jumpForceInput").value||"100"}),
       copyBtn:"copyJumpPadScript", downloadBtn:"downloadJumpPadScript", filename:"JumpPad.lua" },
     { genBtn:"generateSpeedBoost", output:"speedBoostOutput", template:speedBoostPadTemplate,
-      values:()=>({speed:document.getElementById("speedBoostInput").value||"30"}),
+      values:()=>({speed:document.getElementById("speedBoostInput").value||"2"}),
       copyBtn:"copySpeedBoostScript", downloadBtn:"downloadSpeedBoostScript", filename:"SpeedBoost.lua" },
     { genBtn:"generateMessagePopup", output:"messagePopupOutput", template:messagePopupTemplate,
       values:()=>({message:document.getElementById("popupMessageInput").value||"Hello!"}),
@@ -203,8 +204,14 @@ end)
     genBtn.addEventListener("click",()=>{
       outputEl.textContent = fillTemplate(gen.template, gen.values()).trim();
     });
-    copyBtn.addEventListener("click",()=>copyTextToClipboard(outputEl.textContent.trim()));
-    downloadBtn.addEventListener("click",()=>downloadScript(gen.filename, outputEl.textContent.trim()));
+
+    copyBtn.addEventListener("click",()=>{
+      copyTextToClipboard(outputEl.textContent.trim());
+    });
+
+    downloadBtn.addEventListener("click",()=>{
+      downloadScript(gen.filename, outputEl.textContent.trim());
+    });
   });
 
   // ==== Dark Mode ====
